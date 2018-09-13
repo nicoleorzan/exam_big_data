@@ -1,0 +1,56 @@
+---
+title: "Report"
+author: "Nicole Orzan"
+date: "10 settembre 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+In this report I will explain the things I did for the exam
+
+## The Dataset
+
+For this study I joined various dataset. I started from the dataset "Countries of the world" that you can find on Kaggle at https://www.kaggle.com/fernandol/countries-of-the-world, which contains free Data from the World Factbook; quoting the website: "The World Factbook is in the public domain and may be used freely by anyone at anytime without seeking permission."    
+I decided to move forward my analysis combining to it some addittive datasets I found on the World Bank Open Data at https://data.worldbank.org/, because I wanted to focus my study on the overall health of different Countries.
+
+The starting dataset consists of a series of variables describing different aspects of various countries all over the world: for every Country you can know the amount of population, the birthrate, the deathrate (over 1000 people), the GDP (Gross domestic product) measure of the State and so on.
+
+
+**World Population**
+
+I downloaded a dataset containing the total population of the world, divided by Countries. These data range from 1960 to 2017, so first of all I checked the change of the distribution of the population over the Continents and the States, and the percentage of growth in the various areas on different years, by means of dplyr and the rworldmap package.
+
+We can see that in 1960 the total world population amounted to about 3.0321 billions, while in 2017 around 7.5303.
+
+![](pop_number.png){ width=50% }
+
+In the table below you can find the percentage of growth for every year, computed as:
+$$
+\frac{P_{t}-P{t_0}}{P_{t}} \cdot 100
+$$
+Where $P_{t}$ represents the population in a certain year and $P_{t_0}$ the population at the preceeding year.
+
+
+```{r, include=FALSE}
+load("growth.Rda")
+head(growth, 4)
+```
+
+![](pop_growth.png){ width=50% }
+
+Obviously the numbers contained in the dataset are not precise, there are some missing values around, so we can think of them like an estimation (or better an underestimation) of the World population in different regions.
+
+With the image above we can have a sight at the distribution of the people around the Continents and the different Regions.
+
+**Gross domestic product**
+
+The GDP is defined as "an aggregate measure of production equal to the sum of the gross values added of all resident and institutional units engaged in production (plus any taxes, and minus any subsidies, on products not included in the value of their outputs).” And is considered the **"world's most powerful statistical indicator of national development and progress"**.
+
+The dataset I used contained the percentage of the GDP annual growth for every country.
+
+
+
+
