@@ -25,7 +25,7 @@ I downloaded a dataset containing the total population of the world, divided by 
 
 We can see that in 1960 the total world population amounted to about 3.0321 billions, while in 2017 around 7.5303.
 
-![](pop_number.png){ width=50% }
+![](Images/pop_number.png){ width=50% }
 
 In the table below you can find the percentage of growth for every year, computed as:
 $$
@@ -35,11 +35,13 @@ Where $P_{t}$ represents the population in a certain year and $P_{t_0}$ the popu
 
 
 ```{r, include=FALSE}
-load("growth.Rda")
-head(growth, 4)
+#load("growth.Rda")
+#head(growth, 4)
 ```
 
-![](pop_growth.png){ width=50% }
+![](Images/pop_growth.png){ width=50% }
+
+![](Images/1960.png){ width=70% }
 
 Obviously the numbers contained in the dataset are not precise, there are some missing values around, so we can think of them like an estimation (or better an underestimation) of the World population in different regions.
 

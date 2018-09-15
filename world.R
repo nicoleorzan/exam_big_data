@@ -5,20 +5,22 @@
   library(countrycode)
   library(tidyr)
   library(stringr)
+  library(shiny)
+  #library(plotly)
 }
 
-setwd('/home/nicole/Data Science/Exam_data_analysis')
+setwd('/home/nicole/Data Science/exam_big_data')
 #### LOAD DATASETS ###
-{countries_world <- read.csv("countries of the world.csv", na.strings=c("","NA"))
+{countries_world <- read.csv("Datasets/countries of the world.csv", na.strings=c("","NA"))
 colnames(countries_world)[4]="Area"
 colnames(countries_world)[5]="Density"
 countries_world[,2] <- str_trim(countries_world[,2], "both") 
 #MPI_national <- read.csv("MPI_national.csv")
 #MPI_subnational <- read.csv("MPI_subnational.csv")
-immunization <- read.csv("immunization.csv", skip=4)
-death <- read.csv("death_rate.csv", skip=4)
-Gdp <- read.csv("GDP_annual_growth.csv", skip=4)
-total_population <- read.csv("total_population.csv", skip=4)
+immunization <- read.csv("Datasets/immunization.csv", skip=4)
+death <- read.csv("Datasets/death_rate.csv", skip=4)
+Gdp <- read.csv("Datasets/GDP_annual_growth.csv", skip=4)
+total_population <- read.csv("Datasets/total_population.csv", skip=4)
 }
 
 ###====== Adding country code to world countries 
@@ -76,7 +78,7 @@ na_reg <- function(x, country_region){
     select(Country, Continent, everything())
 }
 
-datas <- vector(mode="list", length=4)
+{datas <- vector(mode="list", length=4)
 names(datas) <- c("immunization", "death", "Gdp", "total_population")
 datas[[1]] <- immunization; datas[[2]] <- death
 datas[[3]] <- Gdp; datas[[4]] <- total_population
@@ -88,7 +90,55 @@ for (i in (1:length(datas))){
   datas[[i]] <- x
 }
 immunization <- datas[[1]]; death <- datas[[2]]
-Gdp <- datas[[3]]; total_population <- datas[[4]]
+Gdp <- datas[[3]]; total_population <- datas[[4]]}
+
+# cleaning additive data
+total_population <-total_population %>%
+  mutate(Continent=replace(Continent, Country=="Kosovo", "Europe")) %>%
+  mutate(Continent=replace(Continent, Country=="Virgin Islands (U.S.)", "America"))%>%
+  mutate(Continent=replace(Continent, Country=="Vanuatu", "Oceania"))%>%
+  mutate(Continent=replace(Continent, Country=="South Sudan", "Africa"))%>%
+  mutate(Continent=replace(Continent, Country=="Montenegro", "Europe"))%>%
+  #mutate(Continent=replace(Continent, Country=="Small states", "Europe"))%>%
+  #mutate(Continent=replace(Continent, Country=="South Asia (IDA & IBRD)", "Asia"))%>%
+  #mutate(Continent=replace(Continent, Country=="Sub-Saharan Africa (IDA & IBRD countries)", "Africa"))%>%
+  #mutate(Continent=replace(Continent, Country=="Latin America & the Caribbean (IDA & IBRD countries)", "America"))%>%
+  #mutate(Continent=replace(Continent, Country=="East Asia & Pacific (IDA & IBRD countries)", "Asia"))%>%
+  mutate(Continent=replace(Continent, Country=="Sint Maarten (Dutch part)", "America"))%>%
+  #mutate(Continent=replace(Continent, Country=="Sub-Saharan Africa (excluding high income)", "Africa"))%>%
+  #mutate(Continent=replace(Continent, Country=="South Asia", "Asia"))%>%
+  #mutate(Continent=replace(Continent, Country=="South Sudan", "Africa"))%>%
+  #mutate(Continent=replace(Continent, Country=="Sub-Saharan Africa", "Africa"))%>%
+  mutate(Continent=replace(Continent, Country=="Pacific island small states", "Asia"))%>%
+  #mutate(Continent=replace(Continent, Country=="North America", "America"))%>%
+  mutate(Continent=replace(Continent, Country=="St. Martin (French part)", "America"))%>%
+  #mutate(Continent=replace(Continent, Country=="Latin America & Caribbean", "America")) %>%
+  #mutate(Continent=replace(Continent, Country=="Latin America & Caribbean (excluding high income)", "America"))%>%
+  #mutate(Continent=replace(Continent, Country=="European Union", "Europe"))%>%
+  mutate(Continent=replace(Continent, Country=="Caribbean small states", "America"))%>%
+  #mutate(Continent=replace(Continent, Country=="Euro area", "Europe"))%>%
+  mutate(Continent=replace(Continent, Country=="Curacao", "America"))%>%
+  mutate(Continent=replace(Continent, Country=="Channel Islands", "America"))
+#mutate(Continent=replace(Continent, Country=="Central Europe and the Baltics", "Europe"))
+
+
+total_population %>%
+  select(Country, Continent, `1960`) %>%
+  na.omit()  %>%
+  summarize(sum(`1960`))
+
+na_pop <- total_population %>%
+  select(Country, Continent, `1960`) %>%
+  filter(is.na(Continent))#%>%
+  filter(Country!="World")%>%
+  summarize(sum(`1960`, na.rm=TRUE))
+
+#totpopDF <- data.frame(Country = total_population$Country.Code, Population1960 = total_population$`1960`)
+#totpopDF$Country <- as.character(totpopDF$Country)
+
+#left_join(countries_world, totpopDF, by=c(countries_world$Country.Code))
+
+
 
 countries_world <- countries_world %>% 
   mutate(Continent = ifelse(Region=="NORTHERN AMERICA" | Region=="LATIN AMER. & CARIB", "America", ifelse(Region=="NORTHERN AFRICA" | Region=="SUB-SAHARAN AFRICA", "Africa", ifelse(Region=="BALTICS" | Region=="WESTERN EUROPE" | Region=="EASTERN EUROPE" | Region=="C.W. OF IND. STATES", "Europe", ifelse(Region=="NEAR EAST" | Region=="ASIA (EX. NEAR EAST)", "Asia", "Oceania"))))) %>%
@@ -122,6 +172,8 @@ countries_world %>%
     countries_world$StepDensity[val]=i
   }
 }
+
+
 
 ##################  SOME PLOTS #####################
 ggplot(data = countries_world) +
@@ -164,33 +216,16 @@ ggplot(countries_world, aes(x=Continent, y=Population, fill=Region))+
         axis.title.y = element_text(size=20), axis.text=element_text(size=13),
         legend.text=element_text(size=13), legend.title=element_text(size=14))
 
-#png(filename="/home/nicole/Data Science/Exam_data_analysis/continent_distribution.png",width=650,height=400)
-total_population <-total_population %>%
-  mutate(Continent=replace(Continent, Country=="Kosovo", "Europe")) %>%
-  mutate(Continent=replace(Continent, Country=="Virgin Islands (U.S.)", "America"))%>%
-  mutate(Continent=replace(Continent, Country=="Vanuatu", "Oceania"))%>%
-  mutate(Continent=replace(Continent, Country=="South Asia (IDA & IBRD)", "Asia"))%>%
-  mutate(Continent=replace(Continent, Country=="Sub-Saharan Africa (IDA & IBRD countries)", "Africa"))%>%
-  mutate(Continent=replace(Continent, Country=="Latin America & the Caribbean (IDA & IBRD countries)", "America"))%>%
-  mutate(Continent=replace(Continent, Country=="East Asia & Pacific (IDA & IBRD countries)", "Asia"))%>%
-  mutate(Continent=replace(Continent, Country=="Sint Maarten (Dutch part)", "America"))%>%
-  mutate(Continent=replace(Continent, Country=="Sub-Saharan Africa (excluding high income)", "Africa"))%>%
-  mutate(Continent=replace(Continent, Country=="South Asia", "Asia"))%>%
-  mutate(Continent=replace(Continent, Country=="South Sudan", "Africa"))%>%
-  mutate(Continent=replace(Continent, Country=="Sub-Saharan Africa", "Africa"))%>%
-  mutate(Continent=replace(Continent, Country=="Pacific island small states", "Asia"))%>%
-  mutate(Continent=replace(Continent, Country=="North America", "America"))%>%
-  mutate(Continent=replace(Continent, Country=="St. Martin (French part)", "America"))%>%
-  mutate(Continent=replace(Continent, Country=="Latin America & Caribbean", "America")) %>%
-  mutate(Continent=replace(Continent, Country=="Latin America & Caribbean (excluding high income)", "America"))%>%
-  mutate(Continent=replace(Continent, Country=="European Union", "Europe"))%>%
-  mutate(Continent=replace(Continent, Country=="Caribbean small states", "America"))%>%
-  mutate(Continent=replace(Continent, Country=="Euro area", "Europe"))%>%
-  mutate(Continent=replace(Continent, Country=="Curacao", "America"))%>%
-  mutate(Continent=replace(Continent, Country=="Channel Islands", "America"))%>%
-  mutate(Continent=replace(Continent, Country=="Central Europe and the Baltics", "Europe"))
+partial <- total_population %>%
+  select(Country, Continent, Region, `1960`,`2017`) %>%
+  na.omit() #%>%
+  summarize(sum(`1960`))
   
-ggplot(total_population, aes(x=Continent, y=2017, fill=Region))+
+ggplot(partial, aes(x=Continent, y=1960))+
+  geom_bar(width=0.7, stat="identity")
+         
+png(filename="/home/nicole/Data Science/exam_big_data/Images/continent_distribution.png",width=650,height=400)
+ggplot(partial, aes(x=Continent, y=2017, fill=Region))+
   geom_bar(width=0.7, stat="identity")+
   theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5, size=7))+
   theme(legend.text=element_text(size=6))+
@@ -198,8 +233,18 @@ ggplot(total_population, aes(x=Continent, y=2017, fill=Region))+
   theme(plot.title = element_text(size=22), axis.title.x = element_text(size=20),
         axis.title.y = element_text(size=20), axis.text=element_text(size=13),
         legend.text=element_text(size=13), legend.title=element_text(size=14))
+dev.off()
 
-#dev.off()
+png(filename="/home/nicole/Data Science/exam_big_data/Images/continent_distribution_old.png",width=650,height=400)
+ggplot(partial, aes(x=Continent, y=1960, fill=Region))+
+  geom_bar(width=0.7, stat="identity")+
+  theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5, size=7))+
+  theme(legend.text=element_text(size=6))+
+  theme_bw()+
+  theme(plot.title = element_text(size=22), axis.title.x = element_text(size=20),
+        axis.title.y = element_text(size=20), axis.text=element_text(size=13),
+        legend.text=element_text(size=13), legend.title=element_text(size=14))
+dev.off()
 # Let's see how much population on m^2
 # Total area per continent:
 areas <-countries_world %>%
@@ -374,9 +419,9 @@ growth <- gather(worldpop, "year", "WorldPopulation", 5:ncol(worldpop)) %>%
   mutate(percentage_growth = (WorldPopulation-lag(WorldPopulation))/lag(WorldPopulation)*100) %>%
   select(-Country)
 
-save(growth,file="growth.Rda")
 
-ggplot(growth, aes(x=year, y=percentage_growth))
+
+ggplot(growth, aes(x=year, y=percentage_growth))+geom_point()
 
 png(filename="/home/nicole/Data Science/Exam_data_analysis/pop_growth.png",width=550,height=400)
 ggplot(growth, aes(x=year, y=percentage_growth, color=percentage_growth)) +
@@ -390,7 +435,7 @@ ggplot(growth, aes(x=year, y=percentage_growth, color=percentage_growth)) +
 dev.off()
 
 png(filename="/home/nicole/Data Science/Exam_data_analysis/pop_number.png",width=550,height=400)
-ggplot(growth, aes(x=year, y=WorldPopulation, color=WorldPopulation)) +
+ggplot(growth, aes(x=year, y=WorldPopulation))+geom_point()#, color=WorldPopulation)) #+
   theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))+
   scale_x_discrete(breaks=seq(1960, 2017, 5))+
   geom_point()+
@@ -406,10 +451,13 @@ dev.off()
 #####################################
 
 # MORLD MAP IN YEARS 1960, 2017
-totpopDF <- data.frame(country = total_population$Country.Code, Population1960 = total_population$X1960)
+totpopDF <- data.frame(country = total_population$Country.Code, Population1960 = total_population$`1960`)
+
 totpopMap <- joinCountryData2Map(totpopDF, joinCode = "ISO3",nameJoinColumn = "country")
-mapCountryData(totpopMap, nameColumnToPlot="Population1960", catMethod = "logFixedWidth",
-               missingCountryCol = gray(.8), colourPalette = "terrain")
+library(RColorBrewer)
+colourPale <- brewer.pal(6, 'YlOrBr')
+mapCountryData(totpopMap, nameColumnToPlot="Population1960", catMethod = "logFixedWidth", 
+               missingCountryCol = gray(.8), colourPalette=colourPale)
 
 mapCountryData(totpopMap, mapRegion='africa', nameColumnToPlot="Population1960", catMethod = "logFixedWidth",
                missingCountryCol = gray(.8), numCats=10, colourPalette = "terrain")
@@ -424,3 +472,30 @@ mapCountryData(totpopMap2017, nameColumnToPlot="Population2017", catMethod = "lo
 mapCountryData(totpopMap2017, mapRegion='africa', nameColumnToPlot="Population2017", catMethod = "logFixedWidth",
                missingCountryCol = gray(.8), numCats=10, colourPalette = "terrain")
 
+ui <- fluidPage(
+  plotlyOutput("plot"),
+  verbatimTextOutput("click")
+)
+
+server <- function(input, output, session) {
+  
+  output$plot <- renderPlotly({
+    # specify some map projection/options
+    g <- list(
+      scope = 'usa',
+      projection = list(type = 'albers usa'),
+      lakecolor = toRGB('white')
+    )
+    plot_ly(z = state.area, text = state.name, locations = state.abb,
+            type = 'choropleth', locationmode = 'USA-states') %>%
+      layout(geo = g)
+  })
+  
+  output$click <- renderPrint({
+    d <- event_data("plotly_click")
+    if (is.null(d)) "Click on a state to view event data" else d
+  })
+  
+}
+
+shinyApp(ui, server)
