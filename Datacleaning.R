@@ -1,12 +1,12 @@
 {
   library(dplyr)
   library(ggplot2)
-  library(rworldmap)
+  #library(rworldmap)
   library(countrycode)
   library(tidyr)
   library(stringr)
-  #library(shiny)
-  #library(plotly)
+  library(igraph)
+  library(ggraph)
 }
 
 setwd('/home/nicole/Data Science/exam_big_data')
@@ -135,7 +135,20 @@ total_population %>%
     val <- countries_world$DensityValues>densitystep[i]
     countries_world$StepDensity[val]=i
   }
-}
+  }
+
+####################
+worldpop <- total_population %>%
+  filter(Country=="World")
+
+growth <- gather(worldpop, "year", "WorldPopulation", 5:ncol(worldpop)) %>%
+  select(-Continent, -Region, -Country.Code) %>%
+  filter(year != "X1960") %>%
+  mutate(percentage_growth = (WorldPopulation-lag(WorldPopulation))/lag(WorldPopulation)*100) %>%
+  select(-Country)
+
+write.csv(file="Clean/growth_clean.csv", x=growth)
+nrow(growth)
 
 total_population <- total_population %>%
   na.omit() %>% 
@@ -149,25 +162,16 @@ population_density <- total_population %>%
   mutate(Density2010=`2010`/Area) %>%
   mutate(Density2017=`2017`/Area) %>%
   select(Country, Continent, Region, Country.Code,  Density1960:Density2017, Area, logArea)
+
 nrow(total_population)
 nrow(population_density)
 write.csv(file="Clean/density_clean.csv", x=population_density)
 write.csv(file="Clean/population_clean.csv", x=total_population)
 
-####################
-worldpop <- total_population %>%
-  filter(Country=="World")
-
-growth <- gather(worldpop, "year", "WorldPopulation", 5:ncol(worldpop)) %>%
-  select(-Continent, -Region, -Country.Code) %>%
-  filter(year != "X1960") %>%
-  mutate(percentage_growth = (WorldPopulation-lag(WorldPopulation))/lag(WorldPopulation)*100) %>%
-  select(-Country)
-
-write.csv(file="Clean/growth_clean.csv", x=growth)
-
-{pop_per_continent <- total_population[2:ncol(total_population)]%>%
-  select(Continent, everything(), -Region, -Country.Code, -Area)
+ 
+{
+pop_per_continent <- total_population[2:ncol(total_population)]%>%
+  select(Continent, everything(), -Region, -Country.Code, -Area, -logArea)
 
 pop_per_continent %>%
   group_by(Continent)%>%
@@ -180,24 +184,19 @@ pop_per_continent <- pop_per_continent %>%
   mutate_at(vars(`1960`:`2017`), sum) %>%
   unique()
 }
+
+
 write.csv(file="Clean/pop_per_continent.csv", x=pop_per_continent)
-
-# population_density  %>%
-#   na.omit() %>%
-#   filter(Density1960== max(Density1960))
-# 
-# population_density  %>%
-#   na.omit() %>%
-#   filter(Density1960== min(Density1960))
-# 
-# population_density  %>%
-#   na.omit() %>%
-#   filter(Density2017== max(Density2017))
-# 
-# population_density  %>%
-#   na.omit() %>%
-#   filter(Density2017== min(Density2017))
-# 
+write.csv(file="Clean/clean_immuniz.csv", x=immunization)
+write.csv(file="Clean/clean_death.csv", x=death)
 
 
+gro <- growth[2:nrow(growth)-1,]
 
+g <- graph_from_data_frame(gro, directed = FALSE)
+V(g)$id <- seq(1, vcount(g))
+E(g)$weight
+
+graph(gro, layout = "with_kk")+
+  geom_edge_link(aes(alpha = weight))+
+  geom_node_point()

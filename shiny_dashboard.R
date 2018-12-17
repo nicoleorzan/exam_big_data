@@ -1,17 +1,18 @@
-library(shiny)
+{library(shiny)
 library(ggplot2)
 library(shinydashboard)
 library(tools)
 library(DT)
 library(dplyr)
 library(shinydashboard)
-library(stringr)
+library(stringr)}
 
 setwd('/home/nicole/Data Science/exam_big_data')
 density <- read.csv("Clean/density_clean.csv")
 population <- read.csv("Clean/population_clean.csv")
 pop_per_continent <- read.csv("Clean/pop_per_continent.csv")
 growth <- read.csv("Clean/growth_clean.csv")
+growth <- growth[-nrow(growth),]
 
 ###################################################
 ###################################################
@@ -81,7 +82,12 @@ ui <- dashboardPage(
                                      choices = c("Europe", "Africa", "Asia", "Oceania", "America"),
                                      selected = c("Europe"))
                 )# closed box
-              ) # closed fluidrow
+              ), # closed fluidrow
+              fluidRow(
+                box(title = "Pop in the world", width=6, #status="primary Blue",
+                    background = "navy", solidHeader = TRUE,
+                    plotOutput("plotmap", height=300))
+              )
       ) # closed tabitem
     )
   )
@@ -97,6 +103,13 @@ server <- function(input, output) {
       geom_point()+scale_x_discrete(breaks=seq(1960, 2017, 5))+
       theme(legend.position="none")
   })
+  ###
+  Map <- joinCountryData2Map(DF, joinCode = "ISO3",nameJoinColumn = "country")
+  output$plotmap <- renderPlot({
+  mapCountryData(pMap, nameColumnToPlot="Pop", catMethod = "logFixedWidth", 
+                 missingCountryCol = gray(.8), colourPalette=colourPale)
+  })
+  ###
   output$plot2 <- renderPlot({
     ggplot(population_subset(), aes_string(x = input$x2, y = input$y2, color = input$z2)) + 
       geom_point()
