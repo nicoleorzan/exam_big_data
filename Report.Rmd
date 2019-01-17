@@ -4,7 +4,6 @@ author: "Nicole Orzan"
 date: "17 gennaio 2019"
 output:   
   html_document:
-    keep_md: true
     toc: yes
   include: null
   ioslides_presentation:
