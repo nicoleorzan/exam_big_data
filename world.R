@@ -43,7 +43,7 @@ ggplot(data=early_years, aes(x=A))+
   xlab("Years")+
   ylab("Population")+
   theme_minimal()+
-  ggtitle("Early Ages Population Estimation")
+  ggtitle("Population Estimation of Early Ages (200 D.C - 1800 D.C)")
   
 p <- plot_ly(early_years, x = ~A, y = ~B, name = 'trace 0', type = 'scatter', mode = 'lines') %>%
   add_trace(y = ~C, name = 'trace 1', mode = 'lines+markers')

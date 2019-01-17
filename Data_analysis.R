@@ -16,6 +16,7 @@ setwd('/home/nicole/Data Science/exam_big_data/Clean')
 {
 density <- read.csv("density_clean.csv")
 population <- read.csv("population_clean.csv")
+
 pop_per_continent <- read.csv("pop_per_continent.csv")
 growth <- read.csv("growth_clean.csv")
 immunization <- read.csv("clean_immuniz.csv")
