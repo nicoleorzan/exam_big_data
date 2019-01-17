@@ -53,3 +53,16 @@ p2 <- plot_ly(full, x = ~year, y = ~quantity, name = 'population', type = 'scatt
          yaxis = list (title = paste("Total population of ",place)))
 p <- subplot(p1, p2)
 p
+
+full$year <- as.numeric(full$year)
+
+full2 <- full %>% 
+  select(q =quantity, y=year)%>%
+  mutate(p = ((q-lag(q))/(lag(q))))
+ggplot(full2, aes(x=y, y=p))+geom_line()
+  
+p1 <- plot_ly(full2, x = ~y, y = ~p, name = 'PGR', type = 'scatter', mode = 'lines+markers') %>%
+layout(title = "Demoghraphic Transition: PGR",
+         xaxis = list(title = "Year"),
+         yaxis = list (title = paste("PGR of ",place)))
+p1

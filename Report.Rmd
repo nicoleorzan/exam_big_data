@@ -1,7 +1,7 @@
 ---
 title: "World Population Study"
 author: "Nicole Orzan"
-date: "17 gennaio 2019"
+date: "11 february 2019"
 output:   
   html_document:
     toc: yes
@@ -315,6 +315,6 @@ The dataset I used contained the percentage of the GDP annual growth for every c
 
 ## References and Used data
 
-[1] https://data.worldbank.org/
-[2] http://www.ecology.com/population-estimates-year-2050/ (early ages)
-[3] https://en.wikipedia.org/wiki/Demographic_transition#History_of_the_theory
+[1] https://data.worldbank.org/< br\>
+[2] http://www.ecology.com/population-estimates-year-2050/ (early ages)< br\>
+[3] https://en.wikipedia.org/wiki/Demographic_transition#History_of_the_theory< br\>
