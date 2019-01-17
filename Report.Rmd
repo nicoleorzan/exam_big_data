@@ -34,7 +34,7 @@ fontsize: 10pt
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-<img src="overpop.jpg" style="position:absolute;top:0px;right:0px;" width=300/>
+<img src="Images/overpop.jpg" style="position:absolute;top:0px;right:0px;" width=300/>
 
 ## Motivation
 
