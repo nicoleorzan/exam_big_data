@@ -9,7 +9,31 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-In this report I will explain the things I did for the exam
+## Motivation
+
+Never before in history, have there been so many people on Earth as right now. The number boosted in the years, from around 1 billion in the year 1800, to 7.5 billions in 2017.
+
+```{r, echo=FALSE, message=FALSE}
+library(plotly)
+library(readODS)
+early_years <- read.ods("Datasets/before.ods")
+early_years <- data.frame(early_years)
+early_years <- early_years[2:nrow(early_years),]
+early_years[,1] <- as.integer(early_years[,1])
+early_years[,2] <- as.integer(early_years[,2])
+early_years[,3] <- as.integer(early_years[,3])
+ 
+p <- plot_ly(early_years, x = ~A, y = ~B, name = 'Lower Estimate', type = 'scatter', mode = 'lines+markers') %>%
+  add_trace(y = ~C, name = 'Upper Estimate', mode = 'lines+markers') %>%
+  layout(title = "Early Ages Population Estimation",
+         xaxis = list(title = "Years"),
+         yaxis = list (title = "World Population"))
+p 
+#<img src="https://plot.ly/~Niki23/132.png">
+```
+
+
+
 
 ## The Dataset
 
@@ -25,7 +49,7 @@ I downloaded a dataset containing the total population of the world, divided by 
 
 We can see that in 1960 the total world population amounted to about 3.0321 billions, while in 2017 around 7.5303.
 
-![](Images/pop_number.png){ width=50% }
+![](Images/pop_number.png){ width=45% } ![](Images/pop_growth.png){ width=45% }
 
 In the table below you can find the percentage of growth for every year, computed as:
 $$
@@ -34,18 +58,146 @@ $$
 Where $P_{t}$ represents the population in a certain year and $P_{t_0}$ the population at the preceeding year.
 
 
-```{r, include=FALSE}
-#load("growth.Rda")
-#head(growth, 4)
+
+```{r, echo=FALSE}
+#![](Images/1960.png){ width=70% }
 ```
 
-![](Images/pop_growth.png){ width=50% }
 
-![](Images/1960.png){ width=70% }
 
 Obviously the numbers contained in the dataset are not precise, there are some missing values around, so we can think of them like an estimation (or better an underestimation) of the World population in different regions.
 
 With the image above we can have a sight at the distribution of the people around the Continents and the different Regions.
+
+![](Images/continent_distribution.png){ width=65% }
+
+
+
+
+
+
+
+
+```{r, echo=FALSE, message=FALSE}
+library(leaflet)
+library(dplyr)
+library(rgdal)
+library(geojsonio)
+setwd('/home/nicole/Data Science/exam_big_data/Clean')
+density <- read.csv("density_clean_with_NAs.csv")
+population <- density
+
+
+colnames(population)[2] <- "name"
+{
+levels(population$name) <- c(levels(population$name), "United States of America")
+population$name[population$name == 'United States'] <- "United States of America"
+
+levels(population$name) <- c(levels(population$name), "Russia")
+population$name[population$name == 'Russian Federation'] <- "Russia"
+
+levels(population$name) <- c(levels(population$name), "Democratic Republic of the Congo")
+population$name[population$name == "Congo, Dem. Rep."] <- "Democratic Republic of the Congo"
+
+levels(population$name) <- c(levels(population$name), "Iran")
+population$name[population$name == "Iran, Islamic Rep."] <- "Iran"
+
+levels(population$name) <- c(levels(population$name), "Republic of Serbia")
+population$name[population$name == "Serbia"] <- "Republic of Serbia"
+
+levels(population$name) <- c(levels(population$name), "Egypt")
+population$name[population$name == "Egypt, Arab Rep."] <- "Egypt"
+
+levels(population$name) <- c(levels(population$name), "Venezuela")
+population$name[population$name == 'Venezuela, RB'] <- "Venezuela"
+
+levels(population$name) <- c(levels(population$name), "United Republic of Tanzania")
+population$name[population$name == "Tanzania"] <- "United Republic of Tanzania"
+
+levels(population$name) <- c(levels(population$name), "Yemen")
+population$name[population$name == 'Yemen, Rep.'] <- "Yemen"
+
+levels(population$name) <- c(levels(population$name), "Ivory Coast")
+population$name[population$name == "Cote d'Ivoire"] <- "Ivory Coast"
+
+levels(population$name) <- c(levels(population$name), "Kyrgyzstan")
+population$name[population$name == "Kyrgyz Republic"] <- "Kyrgyzstan"
+
+levels(population$name) <- c(levels(population$name), "Syria")
+population$name[population$name == "Syrian Arab Republic"] <- "Syria"
+
+levels(population$name) <- c(levels(population$name), "Republic of the Congo")
+population$name[population$name == "Congo, Rep."] <- "Republic of the Congo"
+
+levels(population$name) <- c(levels(population$name), "Laos")
+population$name[population$name == "Lao PDR"] <- "Laos"
+
+levels(population$name) <- c(levels(population$name), "Slovakia")
+population$name[population$name == "Slovak Republic"] <- "Slovakia"
+
+levels(population$name) <- c(levels(population$name), "Macedonia")
+population$name[population$name == "Macedonia, FYR"] <- "Macedonia"
+
+levels(population$name) <- c(levels(population$name), "Guinea Bissau")
+population$name[population$name == "Guinea-Bissau"] <- "Guinea Bissau"
+
+levels(population$name) <- c(levels(population$name), "South Korea")
+population$name[population$name == "Korea, Rep."] <- "South Korea"
+
+levels(population$name) <- c(levels(population$name), "North Korea")
+population$name[population$name == "Korea, Dem. People’s Rep."] <- "North Korea"
+}
+
+setwd('/home/nicole/Data Science/exam_big_data')
+states <- geojsonio::geojson_read("prova.geo.json", what = "sp")
+
+prova <- merge(states, population, by="name")
+
+m <- leaflet(prova) %>%
+  setView(-1, 42, zoom=2) %>%
+  addProviderTiles("MapBox", options = providerTileOptions(
+    id = "mapbox.light",
+    accessToken = Sys.getenv('MAPBOX_ACCESS_TOKEN')))
+
+
+bins <- c(0, 10, 20, 50, 100, 200, 500, 1000, Inf)
+pal <- colorBin("YlOrRd", domain = states$density, bins = bins)
+
+
+labels <- sprintf(
+  "<strong>%s</strong><br/>%g people / m<sup>2</sup>",
+  prova$name, prova$Density2017
+) %>% lapply(htmltools::HTML)
+
+
+m <- m %>% addPolygons(
+  fillColor = ~pal(Density2017),
+  weight = 2,
+  opacity = 1,
+  color = "white",
+  dashArray = "3",
+  fillOpacity = 0.7,
+  highlight = highlightOptions(
+    weight = 5,
+    color = "#666",
+    dashArray = "",
+    fillOpacity = 0.7,
+    bringToFront = TRUE),
+  label = labels,
+  labelOptions = labelOptions(
+    style = list("font-weight" = "normal", padding = "3px 8px"),
+    textsize = "15px",
+    direction = "auto"))
+m
+#<<insertHTML:[map.html]
+```
+
+
+
+
+
+
+
 
 **Gross domestic product**
 
@@ -55,5 +207,4 @@ The dataset I used contained the percentage of the GDP annual growth for every c
 
 ## What are the Prospects?
 
-Currently the world popul
 

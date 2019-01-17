@@ -1,4 +1,4 @@
-library(shiny)
+{library(shiny)
 library(shinythemes)
 library(ggplot2)
 library(tools)
@@ -6,6 +6,7 @@ library(DT)
 library(dplyr)
 library(shinydashboard)
 library(stringr)
+}
 
 density <- read.csv("Clean/density_clean.csv")
 population <- read.csv("Clean/population_clean.csv")

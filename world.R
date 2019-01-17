@@ -1,13 +1,19 @@
 {
   library(dplyr)
   library(ggplot2)
+  library(plotly)
   library(rworldmap)
   library(countrycode)
+  library(readODS)
   library(tidyr)
+  library(RColorBrewer)
   library(stringr)
   library(ggmap)
   library(shiny)
   #library(plotly)
+  library(geojsonio)
+  library(rgdal)
+  library(leaflet)
 }
 
 setwd('/home/nicole/Data Science/exam_big_data')
@@ -17,12 +23,32 @@ colnames(countries_world)[4]="Area"
 colnames(countries_world)[5]="Density"
 countries_world[,2] <- str_trim(countries_world[,2], "both") 
 #MPI_national <- read.csv("MPI_national.csv")
-#MPI_subnational <- read.csv("MPI_subnational.csv")
+##MPI_subnational <- read.csv("MPI_subnational.csv")
 immunization <- read.csv("Datasets/immunization.csv", skip=4)
 death <- read.csv("Datasets/death_rate.csv", skip=4)
 Gdp <- read.csv("Datasets/GDP_annual_growth.csv", skip=4)
 total_population <- read.csv("Datasets/total_population.csv", skip=4)
+early_years <- read.ods("Datasets/before.ods")
 }
+
+early_years <- data.frame(early_years)
+early_years <- early_years[2:nrow(early_years),]
+early_years[,1] <- as.integer(early_years[,1])
+early_years[,2] <- as.integer(early_years[,2])
+early_years[,3] <- as.integer(early_years[,3])
+
+ggplot(data=early_years, aes(x=A))+
+  geom_line(aes(y = B, colour="Lower Estimate")) + 
+  geom_line(aes(y = C, colour="Upper Estimate")) + 
+  xlab("Years")+
+  ylab("Population")+
+  theme_minimal()+
+  ggtitle("Early Ages Population Estimation")
+  
+p <- plot_ly(early_years, x = ~A, y = ~B, name = 'trace 0', type = 'scatter', mode = 'lines') %>%
+  add_trace(y = ~C, name = 'trace 1', mode = 'lines+markers')
+chart_link = api_create(p, filename="line-mode1")
+chart_link
 
 ###====== Adding country code to world countries 
 ###====== using countrycode package !!!
@@ -208,6 +234,7 @@ countries_world %>%
   
 
 #png(filename="/home/nicole/Data Science/Exam_data_analysis/continent_distribution.png",width=650,height=400)
+#QUESTO
 ggplot(countries_world, aes(x=Continent, y=Population, fill=Region))+
   geom_bar(width=0.7, stat="identity")+
   theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5, size=7))+
@@ -230,7 +257,8 @@ ggplot(partial, aes(x=Continent, y=2017, fill=Region))+
   geom_bar(width=0.7, stat="identity")+
   theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5, size=7))+
   theme(legend.text=element_text(size=6))+
-  theme_bw()+
+  theme_bw()+ylab("count")+
+  ggtitle("2017 Population distribution")+
   theme(plot.title = element_text(size=22), axis.title.x = element_text(size=20),
         axis.title.y = element_text(size=20), axis.text=element_text(size=13),
         legend.text=element_text(size=13), legend.title=element_text(size=14))
@@ -246,6 +274,8 @@ ggplot(partial, aes(x=Continent, y=1960, fill=Region))+
         axis.title.y = element_text(size=20), axis.text=element_text(size=13),
         legend.text=element_text(size=13), legend.title=element_text(size=14))
 dev.off()
+
+
 # Let's see how much population on m^2
 # Total area per continent:
 areas <-countries_world %>%
@@ -255,6 +285,8 @@ areas <-countries_world %>%
   select(Continent_Area_km2, Continent_Pop, Continent_Density_ppl_on_km2 , everything())%>%
   distinct(Continent_Area_km2, Continent_Pop, Continent_Density_ppl_on_km2) %>%
 arrange(desc(Continent_Area_km2))
+
+
 
 ##############################################3
 
@@ -477,5 +509,16 @@ mapCountryData(totpopMap2017, nameColumnToPlot="Population2017", catMethod = "lo
 mapCountryData(totpopMap2017, mapRegion='africa', nameColumnToPlot="Population2017", catMethod = "logFixedWidth",
                missingCountryCol = gray(.8), numCats=10, colourPalette = "terrain")
 
-#map <- get_map(location=c( lon=28.034088, lat=-4), zoom = 3, source="google",maptype="roadmap",crop=FALSE)
-#ggmap(map)
+
+# DA QUI VA
+states <- geojsonio::geojson_read("prova.geo.json", what = "sp")
+class(states)
+names(states)
+
+m <- leaflet(states) %>%
+  setView(-1, 42, zoom=1) %>%
+  addProviderTiles("MapBox", options = providerTileOptions(
+    id = "mapbox.light",
+    accessToken = Sys.getenv('MAPBOX_ACCESS_TOKEN')))
+m %>% addPolygons()
+

@@ -48,7 +48,17 @@ country_region <- data.frame(Country.Code=countries_world$Country.Code,
                              Region=countries_world$Region,
                              Area=countries_world$Area)
 country_region$Country.Code <- as.character(country_region$Country.Code)
+de <- list(Country.Code="SD", Country="South Sudan", Region="SUB-SAHARAN AFRICA", Area=619745)
+levels(country_region$Country) <- c(levels(country_region$Country), "South Sudan")
 
+#de <- list(Country.Code="SD", Country="Republic of Serbia", Region="SUB-SAHARAN AFRICA", Area=619745)
+#levels(country_region$Country) <- c(levels(country_region$Country), "Republic of Serbia")
+
+#de <- list(Country.Code="SD", Country="South Sudan", Region="SUB-SAHARAN AFRICA", Area=619745)
+#levels(country_region$Country) <- c(levels(country_region$Country), "South Sudan")
+
+
+country_region = rbind(country_region,de)
 #######==== Dropping columns and rows with ONLY ======########
 #######==== NA's, adding Region and Continent ======########
 
@@ -150,9 +160,24 @@ growth <- gather(worldpop, "year", "WorldPopulation", 5:ncol(worldpop)) %>%
 write.csv(file="Clean/growth_clean.csv", x=growth)
 nrow(growth)
 
+total_population_withNAs <- total_population %>%
+  mutate(logArea = log(Area))
+
 total_population <- total_population %>%
   na.omit() %>% 
   mutate(logArea = log(Area))
+
+population_density_with_NAS <- total_population_withNAs %>%
+  mutate(Density1960=`1960`/Area) %>%
+  mutate(Density1970=`1970`/Area) %>%
+  mutate(Density1980=`1980`/Area) %>%
+  mutate(Density1990=`1990`/Area) %>%
+  mutate(Density2000=`2000`/Area) %>%
+  mutate(Density2010=`2010`/Area) %>%
+  mutate(Density2017=`2017`/Area) %>%
+  select(Country, Continent, Region, Country.Code,  Density1960:Density2017, Area, logArea)
+
+
 population_density <- total_population %>%
   mutate(Density1960=`1960`/Area) %>%
   mutate(Density1970=`1970`/Area) %>%
@@ -166,8 +191,9 @@ population_density <- total_population %>%
 nrow(total_population)
 nrow(population_density)
 write.csv(file="Clean/density_clean.csv", x=population_density)
+write.csv(file="Clean/density_clean_with_NAs.csv", x=population_density_with_NAS)
 write.csv(file="Clean/population_clean.csv", x=total_population)
-
+write.csv(file="Clean/population_clean_with_NAs.csv", x=total_population_withNAs)
  
 {
 pop_per_continent <- total_population[2:ncol(total_population)]%>%
