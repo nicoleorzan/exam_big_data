@@ -5,12 +5,15 @@
   library(countrycode)
   library(tidyr)
   library(stringr)
+  library(plotly)
 }
 
 setwd('/home/nicole/Data Science/exam_big_data')
 birth_rate <- read.csv("Datasets/birth_rate.csv", skip=4)
 death_rate <- read.csv("Datasets/death_rate.csv", skip=4)
 tot_pop <- read.csv("Datasets/total_population.csv", skip=4)
+tot_pop2 <- read.csv("Datasets/pop_italy_earlyages.csv")
+#tot_pop2 <- tot_pop2[1:120,]
 
 dem_trans <- function(place) {
   birth_rate <- birth_rate %>%
@@ -54,6 +57,13 @@ p2 <- plot_ly(full, x = ~year, y = ~quantity, name = 'population', type = 'scatt
 p <- subplot(p1, p2)
 p
 
+p3 <- plot_ly(tot_pop2, x = ~year, y = ~pop, name = 'population', type = 'scatter', mode = 'lines+markers') %>%
+  layout(title = "Population amount",
+         xaxis = list(title = "Year"),
+         yaxis = list (title = paste("Total population of ",place)))
+p3
+
+
 full$year <- as.numeric(full$year)
 
 full2 <- full %>% 
@@ -66,3 +76,31 @@ layout(title = "Demoghraphic Transition: PGR",
          xaxis = list(title = "Year"),
          yaxis = list (title = paste("PGR of ",place)))
 p1
+italy <- tot_pop %>%
+  filter(Country.Name==place)
+colnames(italy) <- c("Country", "Country.Code", "Indicator.Name", "Indicator.Code", substring(colnames(italy[,6:length(italy)-1]), 2), "X")
+italy[1:4] <- NULL
+it <- gather(italy, key="year", "population", 1:ncol(italy))
+it <- it[-c(58,59),]
+it <-rbind(it, data.frame(year = c(2017), population=c(60551416)))
+
+# Diverging Barcharts
+full2$col = ifelse(full2$p>0, "blue", "green")
+png(filename="/home/nicole/Data Science/exam_big_data/Images/pgn.png",width=800,height=800)
+ggplot(full2, aes(x=y, y=p, colour=col)) + 
+  theme_minimal()+
+  geom_bar(stat='identity', width=.5)  +
+  scale_fill_manual(name="Mileage", 
+                    labels = c("Above Average", "Below Average"), 
+                    values = c("above"="#00ba38", "below"="#f8766d")) + 
+  labs(subtitle="Divergence from 0 of PGR", 
+       title= "Population Growth Rate") + 
+  coord_flip()+
+  ylab("Population Growth Rate value")+xlab("Year")+
+  theme(legend.position="none")+
+  theme(plot.title = element_text(size=30), axis.title.x = element_text(size=24),
+        plot.subtitle = element_text(size=24),
+        axis.title.y = element_text(size=26), axis.text=element_text(size=20),
+        legend.text=element_text(size=13), legend.title=element_text(size=14))
+dev.off()
+

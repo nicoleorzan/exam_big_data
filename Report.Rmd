@@ -55,9 +55,9 @@ early_years[,1] <- as.integer(early_years[,1])
 early_years[,2] <- as.integer(early_years[,2])
 early_years[,3] <- as.integer(early_years[,3])
  
-p <- plot_ly(early_years, x = ~A, y = ~B, name = 'Lower Estimate', type = 'scatter', mode = 'lines+markers') %>%
+p <- plot_ly(early_years, x = ~A, y = ~B, name = 'Lower Estimate', type = 'scatter', mode = 'lines+markers',width = 600, height = 400) %>%
   add_trace(y = ~C, name = 'Upper Estimate', mode = 'lines+markers') %>%
-  layout(title = "Population Estimation of Early Ages (200 D.C - 1800 D.C)",
+  layout(title = "World Population Estimation of Early Ages\n (200 D.C - 1800 D.C)",
          xaxis = list(title = "Year"),
          yaxis = list (title = "World Population (in millions)"))
 p 
@@ -78,7 +78,9 @@ Here's a summary of the five steps:
 * **Stage Two**: in a developing country death rates tents to diminish while birth rates stay high: population is growing;
 * **Stage Three**: thanks to the bettet economic and living conditions, births starts to decrease (a big point here is due to introduction of contraception)
 * **Stage Four**: birth rates and death rates are both low, so population is stabilizing. Most of today's developed countries are in this stage;
-* **Stage Five** (possible stage): here the birth rates have fallen below death rates, so the quantity of older people is bigger than the quantity of younger ones.
+* **Stage Five** (possible stage): here the birth rates have fallen below death rates, so the quantity of older people is bigger than the quantity of younger ones. 
+
+Let's have a look at the situation in Italy, for example: in the graphs below you can see the trend of births, deaths, and the total population from 1960 to 2016.
 
 
 ```{r, echo=FALSE, message=FALSE}
@@ -115,23 +117,55 @@ dem_trans <- function(place) {
 place <- "Italy"
 full <- dem_trans(place)
 
-p1 <- plot_ly(full, x = ~year, y = ~births, name = 'Births', type = 'scatter', mode = 'lines+markers',width = 1000, height = 320) %>%
+p1 <- plot_ly(full, x = ~year, y = ~births, name = 'Births', type = 'scatter', mode = 'lines+markers',width = 1010, height = 320) %>%
   add_trace(y = ~deaths, name = 'Deaths', mode = 'lines+markers') %>%
   layout(title = "Demoghraphic Transition",
          xaxis = list(title = "Year"),
          yaxis = list (title = paste("Deaths/Births (per 1000 people) in ",place)))
 
-p2 <- plot_ly(full, x = ~year, y = ~quantity, name = 'Population', type = 'scatter', mode = 'lines+markers',width = 1000, height = 320) %>%
-  layout(title = "Demoghraphic Transition",
+p2 <- plot_ly(full, x = ~year, y = ~quantity, name = 'Population', type = 'scatter', mode = 'lines+markers',width = 1010, height = 320) %>%
+  layout(title = paste("Demoghraphic Transition of",place),
          xaxis = list(title = "Year"),
-         yaxis = list (title = paste("Total population of ",place)))
+         yaxis = list (title = paste(place, "'s Total population"))#,
+         # shapes = list(list(type = "rect",
+         #            fillcolor = "blue", line = list(color = "blue"), opacity = 0.3,
+         #            x0 = "1980-01-01", x1 = "1985-01-01", xref = "x",
+         #            y0 = 4, y1 = 12.5, yref = "y"),
+         #       list(type = "rect",
+         #         fillcolor = "blue", line = list(color = "blue"), opacity = 0.2,
+         #         x0 = "2000-01-01", x1 = "2005-01-01", xref = "x",
+         #         y0 = 4, y1 = 12.5, yref = "y"))
+  )
+         
 p <- subplot(p1, p2, shareX = TRUE, titleX = TRUE, titleY = TRUE, margin = c(0.02,0.02,1,1))
 p
+```
+
+<br />
+To have a better look at the situation I searched for a dataset which included also some previous years: here below it is shown the trend od total people starting from 1700.
+``````{r, echo=FALSE, message=FALSE}
+tot_pop2 <- read.csv("Datasets/pop_italy_earlyages.csv")
+tot_pop2$pop = tot_pop2$pop*1000
+
+p3 <- plot_ly(tot_pop2, x = ~year, y = ~pop, name = 'population', type = 'scatter', mode = 'lines+markers',width = 900, height = 350) %>%
+  layout(title = "Population amount",
+         xaxis = list(title = "Year\n <a href='http://www.populstat.info/Europe/italyc.htm'>Source of the Data </a>"),
+         yaxis = list (title = paste("Total population of ",place)),
+         margin = c(0.02,0.02,0.02,0.02),
+         shapes = list(list(type = "rect",
+                    fillcolor = "green", line = list(color = "green"), opacity = 0.4,
+                    x0 = "1960", x1 = "2005", xref = "x",
+                    y0 = 400, y1 = 60000000, yref = "y")) )
+          
+p3
 
 ```
 
-< br />
-Italy is currently in Stage 4 of the Demographic Transition Model: as we can see from the above graphics, we are having low birth rates and low death rates; moreover the Population Growth Rate (PGR) is low, causing the stabilization of the people amount.
+<br />
+The green shaded are of the second graph includes the same area of the green-line graph above.
+
+Italy is currently in Stage 4 of the Demographic Transition Model: as we can see from the above graphics, we are having low birth rates and low death rates; moreover the **Population Growth Rate** (PGR) is low, causing the stabilization of the people amount.
+
 
 $$
 PGR = \frac{P(t_2) - P(t_1)}{P(t_1)(t_2 - t_1)}
@@ -140,47 +174,17 @@ $$
 A positive outcome of the PGR indicates that the population is increasing, while a negative one indicates the decreasing of it. Moreover, a zero result means that the quantity has not changed in the selected amount of time.<br />
 Let's compute it on the data used above here, using as time interval the years.
 
-## The Dataset
 
-For this study I joined various dataset. I started from the dataset "Countries of the world" that you can find on Kaggle at https://www.kaggle.com/fernandol/countries-of-the-world, which contains free Data from the World Factbook; quoting the website: "The World Factbook is in the public domain and may be used freely by anyone at anytime without seeking permission."    
-I decided to move forward my analysis combining to it some addittive datasets I found on the World Bank Open Data at https://data.worldbank.org/, because I wanted to focus my study on the overall health of different Countries.
-
-The starting dataset consists of a series of variables describing different aspects of various countries all over the world: for every Country you can know the amount of population, the birthrate, the deathrate (over 1000 people), the GDP (Gross domestic product) measure of the State and so on.
-
-
-**World Population**
-
-I downloaded a dataset containing the total population of the world, divided by Countries. These data range from 1960 to 2017, so first of all I checked the change of the distribution of the population over the Continents and the States, and the percentage of growth in the various areas on different years, by means of dplyr and the rworldmap package.
-
-We can see that in 1960 the total world population amounted to about 3.0321 billions, while in 2017 around 7.5303.
-
-![](Images/pop_number.png){ width=45% } ![](Images/pop_growth.png){ width=45% }
-
-In the table below you can find the percentage of growth for every year, computed as:
-$$
-\frac{P_{t}-P{t_0}}{P_{t}} \cdot 100
-$$
-Where $P_{t}$ represents the population in a certain year and $P_{t_0}$ the population at the preceeding year.
-
-
-
-```{r, echo=FALSE}
-#![](Images/1960.png){ width=70% }
+```{r pressure, echo=FALSE,  out.width = '50%'}
+knitr::include_graphics("Images/pgn.png")
 ```
 
 
-
-Obviously the numbers contained in the dataset are not precise, there are some missing values around, so we can think of them like an estimation (or better an underestimation) of the World population in different regions.
-
-With the image above we can have a sight at the distribution of the people around the Continents and the different Regions.
-
-![](Images/continent_distribution.png){ width=65% }
+As we can see from the plot, the PGR values are quite low, and in the last years (2015 - 2016) starts also to become negative. This is a good proof that Italy's population is starting to diminish, and so that Italy is currently standing into Stage Four of the Demographic Transiiton. 
 
 
-
-
-
-
+Let's now have a look the the World's situation.
+Here below you can see a leaflet representation of the distribution of people in the whole world:
 
 
 ```{r, echo=FALSE, message=FALSE}
@@ -270,7 +274,7 @@ pal <- colorBin("YlOrRd", domain = states$density, bins = bins)
 
 
 labels <- sprintf(
-  "<strong>%s</strong><br/>%g people / kdm<sup>2</sup>",
+  "<strong>%s</strong><br/>%g people / km<sup>2</sup>",
   prova$name, prova$Density2017
 ) %>% lapply(htmltools::HTML)
 
@@ -304,17 +308,106 @@ m
 
 
 
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+![](Images/pop_number2.png){ width=50% } ![](Images/pop_growth2.png){ width=50% }
+
+
+
 **Gross domestic product**
 
 The GDP is defined as "an aggregate measure of production equal to the sum of the gross values added of all resident and institutional units engaged in production (plus any taxes, and minus any subsidies, on products not included in the value of their outputs).” And is considered the **"world's most powerful statistical indicator of national development and progress"**.
 
-The dataset I used contained the percentage of the GDP annual growth for every country.
+
+Here I computed the Percentage of growth for every year, in the whole world:
+
+$$
+\frac{P_{t}-P{t_0}}{P_{t}} \cdot 100
+$$
+Where $P_{t}$ represents the population in a certain year and $P_{t_0}$ the population at the preceeding year.
+
+
+
+```{r, echo=FALSE}
+#![](Images/1960.png){ width=70% }
+```
+
+
+With the image above we can have a sight at the distribution of the people around the Continents and the different Regions.
+
+![](Images/continent_distribution.png){ width=70% ref="refe"}
+
+
 
 ## What are the Prospects?
 
 
-## References and Used data
+## Sources and Analysis
 
-[1] https://data.worldbank.org/< br\>
-[2] http://www.ecology.com/population-estimates-year-2050/ (early ages)< br\>
-[3] https://en.wikipedia.org/wiki/Demographic_transition#History_of_the_theory< br\>
+### Sources Description
+
+For this study I joined various dataset. I started from the dataset "Countries of the world" that you can find on Kaggle at https://www.kaggle.com/fernandol/countries-of-the-world, which contains free Data from the World Factbook.
+
+I decided to move forward my analysis combining this datasets to some additive ones I found on the World Bank Open Data at https://data.worldbank.org/, where I decided ti download the collections of data regarding population amount, birthrate and deathrate (both over 1000 people) and the Gross Domestic Product of a Country; those datasets contain measures from 1960 to 2016 for (quite) every Country in the world, but they show missing data sometimes.<br />
+To analyze the situation in Italy also in earlier years (1700 - 1960) I added the data found here: http://www.populstat.info/Europe/italyc.htm<br />
+Lastly, to have an estimate of the world's population from year one AD, I took data also from here: www.ecology.com/population-estimates-year-2050/
+
+### Data Description
+
+I made my analysis my means of different R packages and utilities: dplyr, leaflet, ggplot2, tidyr are the main names, but I used also geojsonio, rworldmap and countrycode for my parsing and leaflet plots; htmlwidget and htmltools to save and plot some interactive maps.
+
+Let's take a look first of all to the datasets World Bank Open Data: when you decide to download an indicator, you end up with three files: the fist one is the real dataset, which, for example for the "Total Population" indicator, contains the following columns:
+
+* "Country.Name"  
+* "Country.Code"   
+* "Indicator.Name" 
+* "Indicator.Code"
+* years from 1960 to 2017 in the form "X1960"
+
+Indicator Name and Code are quite useless for our scope, beacuse they are only a skimpy description of the table content. Country name and code are, on the other end, essential: each row of the table contains all the data for one single Country, for that indicator, for the 1960 - 2017 time frame.
+In the columns with the years as names, are then contained the actual data.
+
+The other two tables of the dataset contain some Metadata: 
+
+* In the first one we found a source note, which better describes the indicator: for the "Total Population" indicator we found : **Total population is based on the de facto definition of population, which counts all residents regardless of legal status or citizenship. The values shown are midyear estimates.**
+* In the second one we foundmore precise descriptions for each Country. these are data that I have not used, though.
+
+
+### Data Analysis
+
+I started with some data-parsing: first of all I modified the year's columns to eliminate that 'X' in fromt of each year. I decided then to add to each Country the "Continent" and "Region" indicators (the last one indicates better in which part of the Continent the Country is located), to chech the amount of peiople and their distribution as a dependence of them. To do this I had to modify the dataset adding some column by means of dlpyr and the mutate command.
+This analysis can be found into the "world.R" script file.
+
+I decided then to check the amount of population data of different years, to verify if the outcome values were consistent with the well-known effective numbers: I used again dplyr's commands to select and count data, doing something like:
+
+```
+total_population %>%
+    select(Country, `1960`) %>%
+    filter(Country=="World")
+```
+
+As you can see, I did not had to count because also the "World" data are a row of our dataset.<br />
+I had to be careful, so: apart from "World" also other non-Country data were inserted as rows into the dataset. Indeed, when I did my first tests, things didn't add up!
+
+I created then the leaflet interactive map: to make it I used the code you can find inot "leaflet_map.R" script. For it, I had to perform other data arrangements because some Country's names where not exact for leaflet, so it did not show some data at all: for example, instead of "United States" it was expected "United States of America", so I had to check manually for a lot of names.
+
+
+
+
+
+
+
+## References
+
+[1] https://data.worldbank.org/<br />
+[2] https://www.ecology.com/population-estimates-year-2050/ (early ages)<br />
+[3] https://en.wikipedia.org/wiki/Demographic_transition<br />

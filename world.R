@@ -28,30 +28,9 @@ immunization <- read.csv("Datasets/immunization.csv", skip=4)
 death <- read.csv("Datasets/death_rate.csv", skip=4)
 Gdp <- read.csv("Datasets/GDP_annual_growth.csv", skip=4)
 total_population <- read.csv("Datasets/total_population.csv", skip=4)
-early_years <- read.ods("Datasets/before.ods")
 }
 
-early_years <- data.frame(early_years)
-early_years <- early_years[2:nrow(early_years),]
-early_years[,1] <- as.integer(early_years[,1])
-early_years[,2] <- as.integer(early_years[,2])
-early_years[,3] <- as.integer(early_years[,3])
-
-ggplot(data=early_years, aes(x=A))+
-  geom_line(aes(y = B, colour="Lower Estimate")) + 
-  geom_line(aes(y = C, colour="Upper Estimate")) + 
-  xlab("Years")+
-  ylab("Population")+
-  theme_minimal()+
-  ggtitle("Population Estimation of Early Ages (200 D.C - 1800 D.C)")
-  
-p <- plot_ly(early_years, x = ~A, y = ~B, name = 'trace 0', type = 'scatter', mode = 'lines') %>%
-  add_trace(y = ~C, name = 'trace 1', mode = 'lines+markers')
-chart_link = api_create(p, filename="line-mode1")
-chart_link
-
-###====== Adding country code to world countries 
-###====== using countrycode package !!!
+###====== Adding country code to world countries using countrycode package !!!
 {
   countries_world$Country <- as.character(countries_world$Country)
   
@@ -160,12 +139,9 @@ na_pop <- total_population %>%
   filter(Country!="World")%>%
   summarize(sum(`1960`, na.rm=TRUE))
 
-#totpopDF <- data.frame(Country = total_population$Country.Code, Population1960 = total_population$`1960`)
-#totpopDF$Country <- as.character(totpopDF$Country)
-
-#left_join(countries_world, totpopDF, by=c(countries_world$Country.Code))
-
-
+total_population %>%
+  select(Country, Continent, `1960`) %>%
+  filter(Country=="World")
 
 countries_world <- countries_world %>% 
   mutate(Continent = ifelse(Region=="NORTHERN AMERICA" | Region=="LATIN AMER. & CARIB", "America", ifelse(Region=="NORTHERN AFRICA" | Region=="SUB-SAHARAN AFRICA", "Africa", ifelse(Region=="BALTICS" | Region=="WESTERN EUROPE" | Region=="EASTERN EUROPE" | Region=="C.W. OF IND. STATES", "Europe", ifelse(Region=="NEAR EAST" | Region=="ASIA (EX. NEAR EAST)", "Asia", "Oceania"))))) %>%
@@ -180,10 +156,6 @@ countries_world %>%
   group_by(Continent) %>%
   count() %>%
   arrange(n)
-
-countries_world %>%
-  select(Country, Continent) %>%
-  filter(Continent=="Oceania")
 
 
 # STEPPING DENSITY VALUES OF COUNTRIES WORLD
@@ -206,32 +178,8 @@ countries_world %>%
 ggplot(data = countries_world) +
   geom_bar(mapping = aes(x = StepDensity))
 
-ggplot(countries_world, mapping = aes(x=Population, y=Area))+
-  geom_point(mapping=aes(color=StepDensity))
-
 ggplot(countries_world, mapping=aes(x=log2(Population), y=log2(Area)))+
   geom_point(mapping=aes(color=StepDensity))
-
-ggplot(countries_world, aes(x=Region, y=Population, fill=Region))+
-  geom_bar(width=0.7, stat="identity", color="red4")+#fill="sienna2")+
-  theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))+
-  theme(axis.text=element_text(size=7))+
-  guides(fill=FALSE)
-
-ggplot(countries_world, aes(x=Region))+
-  geom_bar(color="chocolate4", fill="lightblue2")+
-  theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))+
-  theme(axis.text=element_text(size=7))
-
-ggplot(countries_world[1:15,], aes(x=Country, y=Population))+
-  geom_bar(width=0.7, stat="identity", color="red4", fill="sienna2")+
-  theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))+
-  theme(axis.text=element_text(size=7))
-
-countries_world %>%
-  select(Population) %>%
-  summarize(sum(as.numeric(Population)))
-  
 
 #png(filename="/home/nicole/Data Science/Exam_data_analysis/continent_distribution.png",width=650,height=400)
 #QUESTO
@@ -249,8 +197,6 @@ partial <- total_population %>%
   na.omit() #%>%
   summarize(sum(`1960`))
   
-ggplot(partial, aes(x=Continent, y=1960))+
-  geom_bar(width=0.7, stat="identity")
          
 png(filename="/home/nicole/Data Science/exam_big_data/Images/continent_distribution.png",width=650,height=400)
 ggplot(partial, aes(x=Continent, y=2017, fill=Region))+
@@ -285,6 +231,9 @@ areas <-countries_world %>%
   select(Continent_Area_km2, Continent_Pop, Continent_Density_ppl_on_km2 , everything())%>%
   distinct(Continent_Area_km2, Continent_Pop, Continent_Density_ppl_on_km2) %>%
 arrange(desc(Continent_Area_km2))
+
+
+
 
 
 
@@ -427,22 +376,12 @@ mapCountryData(GDPMap, nameColumnToPlot="GDP", catMethod = "fixedWidth",
 
 
 
-
-countries_world %>%
-filter(Birthrate==0)
-#group_by(Region) %>%
-#summarise(mean_birth_rate = mean(Birthrate))
-
 # poverty mpi index natrional
 poverDF <- data.frame(country = MPI_national$ISO, poverty = MPI_national$MPI.Urban)
 PoverMap <- joinCountryData2Map(poverDF, joinCode = "ISO3",nameJoinColumn = "country")
 View(PoverMap)
 mapCountryData(PoverMap, nameColumnToPlot="poverty", catMethod = "categorical",
                missingCountryCol = gray(.8))
-library(rgl)
-attach(countries_world)
-plot3d(Density, Area, Population, col="red", size=3) 
-detach(countries_world)
 
 #####################################################
 ####### WORLD PLOT TOTAL POPULATION ANALYSIS ########
@@ -456,14 +395,11 @@ growth <- gather(worldpop, "year", "WorldPopulation", 5:ncol(worldpop)) %>%
   mutate(percentage_growth = (WorldPopulation-lag(WorldPopulation))/lag(WorldPopulation)*100) %>%
   select(-Country)
 
-
-
-ggplot(growth, aes(x=year, y=percentage_growth))+geom_point()
-
-png(filename="/home/nicole/Data Science/Exam_data_analysis/pop_growth.png",width=550,height=400)
+png(filename="/home/nicole/Data Science/exam_big_data/pop_growth.png",width=550,height=400)
 ggplot(growth, aes(x=year, y=percentage_growth, color=percentage_growth)) +
   theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))+
   scale_x_discrete(breaks=seq(1960, 2017, 5))+
+  theme_minimal()+
   geom_point()+
   theme(legend.position="none")+
   labs(x = "Year", y="Growth Percentage", title="Growth Percentage of the World Population")+
@@ -471,10 +407,11 @@ ggplot(growth, aes(x=year, y=percentage_growth, color=percentage_growth)) +
         axis.title.y = element_text(size=20), axis.text=element_text(size=12))
 dev.off()
 
-png(filename="/home/nicole/Data Science/Exam_data_analysis/pop_number.png",width=550,height=400)
-ggplot(growth, aes(x=year, y=WorldPopulation))+geom_point()#, color=WorldPopulation)) #+
+png(filename="/home/nicole/Data Science/exam_big_data/pop_number2.png",width=550,height=400)
+ggplot(growth, aes(x=year, y=WorldPopulation, color=WorldPopulation)) +
   theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))+
   scale_x_discrete(breaks=seq(1960, 2017, 5))+
+  theme_minimal()+
   geom_point()+
   theme(legend.position="none")+
   labs(x = "Year", y="Population", title="Total World Population")+
@@ -508,17 +445,3 @@ mapCountryData(totpopMap2017, nameColumnToPlot="Population2017", catMethod = "lo
 
 mapCountryData(totpopMap2017, mapRegion='africa', nameColumnToPlot="Population2017", catMethod = "logFixedWidth",
                missingCountryCol = gray(.8), numCats=10, colourPalette = "terrain")
-
-
-# DA QUI VA
-states <- geojsonio::geojson_read("prova.geo.json", what = "sp")
-class(states)
-names(states)
-
-m <- leaflet(states) %>%
-  setView(-1, 42, zoom=1) %>%
-  addProviderTiles("MapBox", options = providerTileOptions(
-    id = "mapbox.light",
-    accessToken = Sys.getenv('MAPBOX_ACCESS_TOKEN')))
-m %>% addPolygons()
-
