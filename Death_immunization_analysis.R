@@ -5,10 +5,11 @@
   library(countrycode)
   library(tidyr)
   library(stringr)
+  library(ggmap)
+  library(maptools)
+  library(maps)
 }
-library("ggmap")
-library(maptools)
-library(maps)
+
 map("world", fill=TRUE, col="white", bg="lightblue", ylim=c(-60, 90), mar=c(0,0,0,0))
 
 setwd('/home/nicole/Data Science/exam_big_data/Clean')

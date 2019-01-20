@@ -215,14 +215,3 @@ pop_per_continent <- pop_per_continent %>%
 write.csv(file="Clean/pop_per_continent.csv", x=pop_per_continent)
 write.csv(file="Clean/clean_immuniz.csv", x=immunization)
 write.csv(file="Clean/clean_death.csv", x=death)
-
-
-gro <- growth[2:nrow(growth)-1,]
-
-g <- graph_from_data_frame(gro, directed = FALSE)
-V(g)$id <- seq(1, vcount(g))
-E(g)$weight
-
-graph(gro, layout = "with_kk")+
-  geom_edge_link(aes(alpha = weight))+
-  geom_node_point()

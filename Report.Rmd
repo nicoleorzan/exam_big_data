@@ -385,7 +385,7 @@ The other two tables of the dataset contain some Metadata:
 ### Data Analysis
 
 I started with some data-parsing: first of all I modified the year's columns to eliminate that 'X' in fromt of each year. I decided then to add to each Country the "Continent" and "Region" indicators (the last one indicates better in which part of the Continent the Country is located), to chech the amount of peiople and their distribution as a dependence of them. To do this I had to modify the dataset adding some column by means of dlpyr and the mutate command.
-This analysis can be found into the "world.R" script file.
+This analysis can be found into the "Data_Cleaning.R" script file; I used it then to save the dataset after the cleaning, to work on them.
 
 I decided then to check the amount of population data of different years, to verify if the outcome values were consistent with the well-known effective numbers: I used again dplyr's commands to select and count data, doing something like:
 
