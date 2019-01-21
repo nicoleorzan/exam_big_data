@@ -1,0 +1,111 @@
+---
+title: "World Population Study"
+author: "Nicole Orzan"
+date: "11 february 2019"
+output: ioslides_presentation
+widescreen: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Demographic Transition in Italy
+
+```{r, echo=FALSE, message=FALSE}
+library(tidyr)
+library(plotly)
+library(dplyr)
+#setwd('/home/nicole/Data Science/exam_big_data')
+birth_rate <- read.csv("Datasets/birth_rate.csv", skip=4)
+death_rate <- read.csv("Datasets/death_rate.csv", skip=4)
+tot_pop <- read.csv("Datasets/total_population.csv", skip=4)
+
+dem_trans <- function(place) {
+  birth_rate <- birth_rate %>%
+    filter(Country.Name==place)
+  death_rate <- death_rate %>%
+    filter(Country.Name==place)
+  tot_pop <- tot_pop %>%
+    filter(Country.Name==place)
+  
+  colnames(birth_rate) <- c("Country", "Country.Code", "Indicator.Name", "Indicator.Code", substring(colnames(birth_rate[,6:length(birth_rate)-1]), 2), "X")
+  colnames(death_rate) <- c("Country", "Country.Code", "Indicator.Name", "Indicator.Code", substring(colnames(death_rate[,6:length(death_rate)-1]), 2), "X")
+  colnames(tot_pop) <- c("Country", "Country.Code", "Indicator.Name", "Indicator.Code", substring(colnames(tot_pop[,6:length(tot_pop)-1]), 2), "X")
+  birth_rate[1:4] <- NULL; death_rate[1:4] <- NULL; tot_pop[1:4] <- NULL
+
+  birth <- gather(birth_rate, key="year", "births", 1:ncol(birth_rate))
+  death <- gather(death_rate, key="year", "deaths", 1:ncol(death_rate))
+  pop <- gather(tot_pop, key="year", "quantity", 1:ncol(tot_pop))
+  birth <- birth[-c(58,59),]
+  death <- death[-c(58,59),]
+  pop <- pop[-c(58,59),]
+  #pop$quantity <- pop$quantity/10000000
+  tmp <- left_join(birth, death, by="year")
+  return(left_join(tmp, pop, by="year"))
+}
+place <- "Italy"
+full <- dem_trans(place)
+
+p1 <- plot_ly(full, x = ~year, y = ~births, name = 'Births', type = 'scatter', mode = 'lines+markers',width = 1050, height = 320) %>%
+  add_trace(y = ~deaths, name = 'Deaths', mode = 'lines+markers') %>%
+  layout(title = "Demoghraphic Transition",
+         xaxis = list(title = "Year"),
+         yaxis = list (title = paste("Deaths/Births (per 1000 people) in ",place)))
+
+p2 <- plot_ly(full, x = ~year, y = ~quantity, name = 'Population', type = 'scatter', mode = 'lines+markers',width = 1050, height = 320) %>%
+  layout(title = paste("Demoghraphic Transition of",place),
+         xaxis = list(title = "Year"),
+         yaxis = list (title = paste(place, "'s Total population")) )
+         
+p <- subplot(p1, p2, shareX = TRUE, titleX = TRUE, titleY = TRUE, margin = c(0.02,0.02,0.02,0.02))
+p
+```
+
+## Demographic Transition in Italy
+
+``````{r, echo=FALSE, message=FALSE}
+tot_pop2 <- read.csv("Datasets/pop_italy_earlyages.csv")
+tot_pop2$pop = tot_pop2$pop*1000
+
+p3 <- plot_ly(tot_pop2, x = ~year, y = ~pop, name = 'population', type = 'scatter', mode = 'lines+markers',width = 1000, height = 400) %>%
+  layout(title = "Population amount",
+         xaxis = list(title = "Year\n <a href='http://www.populstat.info/Europe/italyc.htm'>Source of the Data </a>"),
+         yaxis = list (title = paste("Total population of ",place)),
+         margin = c(0.02,0.02,0.02,0.02),
+         shapes = list(list(type = "rect",
+                    fillcolor = "green", line = list(color = "green"), opacity = 0.4,
+                    x0 = "1960", x1 = "2005", xref = "x",
+                    y0 = 400, y1 = 60000000, yref = "y")) )
+          
+p3
+
+```
+
+
+## Population Growth Rate (PGR)
+
+<font size="5">
+$$
+PGR = \frac{P(t_2) - P(t_1)}{P(t_1)(t_2 - t_1)}
+$$
+</font>
+
+
+## World Population Density
+
+```{r, echo=FALSE}
+htmltools::tags$iframe(title = "Map", src = "map.html")
+```
+
+
+
+## References and Data Sources
+
+<font size="4">
+[1] https://data.worldbank.org/ <br />
+[2] https://www.ecology.com/population-estimates-year-2050/<br />
+[3] https://en.wikipedia.org/wiki/Demographic_transition<br />
+[4]
+</font>
+

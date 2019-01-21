@@ -1,11 +1,9 @@
 {
   library(dplyr)
   library(ggplot2)
-  #library(rworldmap)
   library(countrycode)
   library(tidyr)
   library(stringr)
-  library(igraph)
   library(ggraph)
 }
 
@@ -48,21 +46,10 @@ country_region <- data.frame(Country.Code=countries_world$Country.Code,
                              Region=countries_world$Region,
                              Area=countries_world$Area)
 country_region$Country.Code <- as.character(country_region$Country.Code)
-de <- list(Country.Code="SD", Country="South Sudan", Region="SUB-SAHARAN AFRICA", Area=619745)
-levels(country_region$Country) <- c(levels(country_region$Country), "South Sudan")
 
-#de <- list(Country.Code="SD", Country="Republic of Serbia", Region="SUB-SAHARAN AFRICA", Area=619745)
-#levels(country_region$Country) <- c(levels(country_region$Country), "Republic of Serbia")
-
-#de <- list(Country.Code="SD", Country="South Sudan", Region="SUB-SAHARAN AFRICA", Area=619745)
-#levels(country_region$Country) <- c(levels(country_region$Country), "South Sudan")
-
-
-country_region = rbind(country_region,de)
-#######==== Dropping columns and rows with ONLY ======########
-#######==== NA's, adding Region and Continent ======########
-
-na_reg <- function(x, country_region){
+#######==== Dropping columns and rows which ONLY ======########
+#######==== CONTAIN NA's; adding Region and Continent ======########
+na_region_continent <- function(x, country_region){
   
   colnames(x) <- c("Country", "Country.Code", "Indicator.Name", "Indicator.Code", substring(colnames(x[,6:length(x)-1]), 2), "X")
   
@@ -95,7 +82,7 @@ na_reg <- function(x, country_region){
   for (i in (1:length(datas))){
     print(i);  print(names(datas)[i])
     tmp_data <- mget(names(datas)[i])
-    sapply(tmp_data, na_reg, country_region=country_region)
+    sapply(tmp_data, na_region_continent, country_region=country_region)
     datas[[i]] <- x
   }
   immunization <- datas[[1]]; death <- datas[[2]]
@@ -103,7 +90,7 @@ na_reg <- function(x, country_region){
 
 
 # cleaning additive data
-total_population <-total_population %>%
+total_population <- total_population %>%
   mutate(Continent=replace(Continent, Country=="Kosovo", "Europe")) %>%
   mutate(Continent=replace(Continent, Country=="Virgin Islands (U.S.)", "America"))%>%
   mutate(Continent=replace(Continent, Country=="Vanuatu", "Oceania"))%>%
@@ -116,6 +103,22 @@ total_population <-total_population %>%
   mutate(Continent=replace(Continent, Country=="Curacao", "America"))%>%
   mutate(Continent=replace(Continent, Country=="Channel Islands", "America"))
 
+
+#!=======================================================
+# computing correlation between countries about pop growth
+v = t(total_population)
+colnames(v)=v[1,]
+v <- v[-c(1,2,3,4, nrow(v)), ]
+v1 <- as.data.frame(v)
+indx <- sapply(v1, is.factor)
+v1[indx] <- lapply(v1[indx], function(x) as.numeric(as.character(x)))
+cor(v1)
+s <- data.frame(cor(v1))
+is.na(s)
+rownames(s) <- colnames(s)
+e <-s[which(s$Italy>0.95),]
+View(e)
+#!=======================================================
 
 # after cleeaning the data of world tot pop are not exactly
 # the same if we sum all over the regions, maybe beacuse 
