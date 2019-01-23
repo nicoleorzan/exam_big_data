@@ -1,5 +1,5 @@
 ---
-title: "World Population Study"
+title: "World Population Analysis"
 author: "Nicole Orzan"
 date: "11 february 2019"
 output:   
@@ -426,14 +426,78 @@ As we can see from the plot, the PGR values are quite low, and in the last years
 
 ## What are the Prospects?
 
+Let's try to predict what will be the World's population in the next years. To do so, I will use the **Logistic model for Population Growth**, which can be described by the Pearl-Reed logistic equation:
+
+$$
+\frac{dN}{dt} = rN(1-\frac{N}{K})
+$$
+
+This formula is used to describe the self-limitations of growth of a biological population, and was first published (in a different form) in 1838 by Verhulst, who was a belgian mathematician and a statistician. Pearl and Reed popularized the equation in the twentieth century.<br />
+
+In the equation, N represents the number of individuals at time t, r the intrinsic growth rate and K the maximum number of individuals that the environment can support. 
+It can be integrated, obtaining:
+
+$$
+N(t) = \frac{K N_0 e^{-rt}}{K + N_0(e^{-rt}-1)}
+$$
+Where $N_0$ is the starting situation.
+
+The main feature of the logistic model is that it takes the shape of a sigmoid curve and describes the growth of a population as an exponential followed by aa growth decrease, and bounded by the carrying capacity of the environment.
+
+I used then the World Population data between 1960 and 2017 to try out this model and predict how much will the population be in 2100 (the code is inside the script prospects.R) ending with this graph:
+
+```{r, echo=FALSE}
+pop <- read.csv("Datasets/total_population.csv", skip=4)
+{
+w <- pop %>%
+  filter(Country.Name=="World")%>%
+  select(-Country.Name, -Country.Code, -Indicator.Name, -Indicator.Code, -X)
+colnames(w) <- c(substring(colnames(w[,1:length(w)]), 2))
+colnames(w)
+w[2,]<- colnames(w)
+w <- data.frame(t(w))
+colnames(w) <- c("world_pop", "year")
+
+w$world_pop <- as.numeric(as.character(w$world_pop))
+w$year <- as.numeric(as.character(w$year))
+}
+
+newdata <- seq(2018,2100)
+newdata <- data.frame(newdata)
+colnames(newdata)[1] <- "year"
+
+# linear model
+mod <- lm(world_pop ~ year, w)
+lmod <- predict(mod, newdata)
+newdata$lm <- data.frame(lmod)
+#newdata <- newdata %>%
+#  select(lm, year)
 
 
+## LOGIT!! :)
+
+mod <- nls(world_pop ~ SSlogis(year, phi1, phi2, phi3), data = w)
+pred <- predict(mod, newdata)
+#vv <- data.frame(pred)
+newdata$world_pop <- data.frame(pred[1:83])
+newdata <- newdata %>%
+  select(world_pop, year, -lm)
+newdata$world_pop <- as.numeric(unlist(newdata$world_pop))
+tot <- rbind(w, newdata)
+
+p1 <- plot_ly(tot, x = ~year, y = ~world_pop, name = 'popolation', type = 'scatter', mode = 'lines+markers', width = 900, height = 350) %>%
+  layout(title = "Predicted trend of world population growth until 2100",
+         xaxis = list(title = "Year"),
+         yaxis = list (title = paste("Population (Billions)")))
+p1
+```
 
 
 ## References
-[1] https://en.wikipedia.org/wiki/Toba_catastrophe_theory
-[2] https://www.kaggle.com/fernandol/countries-of-the-world
+[1] https://en.wikipedia.org/wiki/Toba_catastrophe_theory<br />
+[2] https://www.kaggle.com/fernandol/countries-of-the-world<br />
 [3] https://data.worldbank.org/<br />
 [4] https://www.ecology.com/population-estimates-year-2050/ (early ages)<br />
 [5] https://en.wikipedia.org/wiki/Demographic_transition<br />
-[last] http://www.clker.com/clipart-530947.html (clipart)
+[6] https://en.wikipedia.org/wiki/Logistic_function<br />
+[7] http://www.clker.com/clipart-530947.html (clipart)
