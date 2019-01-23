@@ -30,30 +30,25 @@ colnames(newdata)[1] <- "year"
 # linear model
 mod <- lm(world_pop ~ year, w)
 lmod <- predict(mod, newdata)
-newdata$world_pop <- data.frame(lmod)
-newdata <- newdata %>%
-  select(world_pop, year)
+newdata$lm <- data.frame(lmod)
+#newdata <- newdata %>%
+#  select(lm, year)
 
 
 ## LOGIT!! :)
 
 mod <- nls(world_pop ~ SSlogis(year, phi1, phi2, phi3), data = w)
 pred <- predict(mod, newdata)
+pred[1:83]
 vv <- data.frame(pred)
-newdata$pred_logistic <-data.frame(pred)
+newdata$world_pop <- data.frame(pred[1:83])
+newdata <- newdata %>%
+  select(world_pop, year, -lm)
+newdata$world_pop <- as.numeric(unlist(newdata$world_pop))
+tot <- rbind(w, newdata)
 
-
-p1 <- plot_ly(year, x = ~year, y = ~pred_logistic, name = 'births', type = 'scatter', mode = 'lines+markers') %>%
- layout(title = "Prediction",
+p1 <- plot_ly(tot, x = ~year, y = ~world_pop, name = 'popolation', type = 'scatter', mode = 'lines+markers') %>%
+  layout(title = "Predicted trend of world population growth until 2100",
          xaxis = list(title = "Year"),
          yaxis = list (title = paste("Pop qunatity ")))
 p1
-years <- seq(1960,2100)
-years$pop <- c(w2$worldpop, year$pred_logistic)
-prova <- left_join(w2, year, by="year")
-## other models
-
-model_pois <- glm(world_pop ~ year, w2, family=gaussian)
-summary(model_pois)
-out <- predict(model_pois, year)
-year$gaus <- data.frame(out)
