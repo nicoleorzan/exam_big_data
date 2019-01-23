@@ -4,7 +4,6 @@
   library(countrycode)
   library(tidyr)
   library(stringr)
-  library(ggraph)
 }
 
 setwd('/home/nicole/Data Science/exam_big_data')

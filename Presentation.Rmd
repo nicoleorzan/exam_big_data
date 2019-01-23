@@ -6,9 +6,58 @@ output: ioslides_presentation
 widescreen: true
 ---
 
+<style>
+.column-left{
+  float: left;
+  width: 15%;
+  text-align: left;
+}
+.column-right{
+  float: right;
+  width: 85%;
+  text-align: center;
+}
+</style>
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
+
+## Motivation
+
+<figure>
+<img src="Images/overpop.jpg" style="position:absolute;top:50px;right:50px;" width=350 border="0">
+</figure>
+
+
+## World in the years
+
+<img width="49%" src="Images/pop_number2.png"/>
+<img width="49%" src="Images/pop_growth2.png"/>
+
+## Population distribution
+
+<img width="80%" src="Images/continent_distribution.png"/>
+
+## World Population Density Distribution
+
+```{r, echo=FALSE}
+htmltools::tags$iframe(title = "Map", src = "map.html")
+```
+
+
+## Demographic Transition
+
+<font size="5">
+
+* **Stage One**: pre-Industrial Revolution, birth rates and death rates are both high, the level of the population stays the same
+* **Stage Two**: in a developing country death rates tents to diminish while birth rates stay high: population is growing
+* **Stage Three**: thanks to the better economic and living conditions, births starts to decrease
+* **Stage Four**: birth rates and death rates are both low, so population is stabilizing. Most of today's developed countries are in this stage
+* **Stage Five** (possible stage): here the birth rates have fallen below death rates, so the quantity of older people is bigger than the quantity of younger ones
+
+</font>
 
 ## Demographic Transition in Italy
 
@@ -84,28 +133,27 @@ p3
 
 
 ## Population Growth Rate (PGR)
-
-<font size="5">
+<div class="column-left">
+<font size="4">
 $$
 PGR = \frac{P(t_2) - P(t_1)}{P(t_1)(t_2 - t_1)}
 $$
 </font>
-
-
-## World Population Density
-
-```{r, echo=FALSE}
-htmltools::tags$iframe(title = "Map", src = "map.html")
+</div>
+<div class="column-right">
+```{r, echo=FALSE,  out.width = '60%'}
+knitr::include_graphics("Images/pgn.png")
 ```
+</div>
 
 
 
 ## References and Data Sources
 
 <font size="4">
-[1] https://data.worldbank.org/ <br />
-[2] https://www.ecology.com/population-estimates-year-2050/<br />
-[3] https://en.wikipedia.org/wiki/Demographic_transition<br />
-[4]
+[1] https://www.kaggle.com/fernandol/countries-of-the-world
+[2] https://data.worldbank.org/ <br />
+[3] https://www.ecology.com/population-estimates-year-2050/<br />
+[4] https://en.wikipedia.org/wiki/Demographic_transition<br />
 </font>
 

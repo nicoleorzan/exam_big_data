@@ -291,7 +291,7 @@ Here's a summary of the five steps:
 
 * **Stage One**: pre-Industrial Revolution, birth rates and death rates are both high; in general the level of the population stays the same;
 * **Stage Two**: in a developing country death rates tents to diminish while birth rates stay high: population is growing;
-* **Stage Three**: thanks to the bettet economic and living conditions, births starts to decrease (a big point here is due to introduction of contraception)
+* **Stage Three**: thanks to the better economic and living conditions, births starts to decrease (a big point here is due to introduction of contraception)
 * **Stage Four**: birth rates and death rates are both low, so population is stabilizing. Most of today's developed countries are in this stage;
 * **Stage Five** (possible stage): here the birth rates have fallen below death rates, so the quantity of older people is bigger than the quantity of younger ones. 
 
@@ -430,13 +430,10 @@ As we can see from the plot, the PGR values are quite low, and in the last years
 
 
 
-
-
-
-
 ## References
 [1] https://en.wikipedia.org/wiki/Toba_catastrophe_theory
-[2] https://data.worldbank.org/<br />
-[3] https://www.ecology.com/population-estimates-year-2050/ (early ages)<br />
-[4] https://en.wikipedia.org/wiki/Demographic_transition<br />
+[2] https://www.kaggle.com/fernandol/countries-of-the-world
+[3] https://data.worldbank.org/<br />
+[4] https://www.ecology.com/population-estimates-year-2050/ (early ages)<br />
+[5] https://en.wikipedia.org/wiki/Demographic_transition<br />
 [last] http://www.clker.com/clipart-530947.html (clipart)
