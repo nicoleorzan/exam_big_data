@@ -13,6 +13,7 @@ setwd('/home/nicole/Data Science/exam_big_data')
   colnames(countries_world)[5]="Density"
   countries_world[,2] <- str_trim(countries_world[,2], "both") 
   immunization <- read.csv("Datasets/immunization.csv", skip=4)
+  fert <- read.csv("Datasets/fertility.csv", skip=4)
   death <- read.csv("Datasets/death_rate.csv", skip=4)
   Gdp <- read.csv("Datasets/GDP_annual_growth.csv", skip=4)
   total_population <- read.csv("Datasets/total_population.csv", skip=4)
@@ -73,10 +74,11 @@ na_region_continent <- function(x, country_region){
     select(Country, Continent, everything())
 }
 
-{datas <- vector(mode="list", length=4)
-  names(datas) <- c("immunization", "death", "Gdp", "total_population")
+{datas <- vector(mode="list", length=5)
+  names(datas) <- c("immunization", "death", "Gdp", "total_population", "fert")
   datas[[1]] <- immunization; datas[[2]] <- death
   datas[[3]] <- Gdp; datas[[4]] <- total_population
+  datas[[5]] <- fert
   
   for (i in (1:length(datas))){
     print(i);  print(names(datas)[i])
@@ -85,7 +87,9 @@ na_region_continent <- function(x, country_region){
     datas[[i]] <- x
   }
   immunization <- datas[[1]]; death <- datas[[2]]
-  Gdp <- datas[[3]]; total_population <- datas[[4]]}
+  Gdp <- datas[[3]]; total_population <- datas[[4]]
+  fert <- datas[[5]]
+  }
 
 
 # cleaning additive data
@@ -129,12 +133,6 @@ total_population %>%
   na.omit()  %>%
   summarize(sum(`2017`))
 
-
-total_population %>%
-  select(Country, Continent, `2017`) %>%
-  filter(is.na(Continent)) %>%
-  filter(`2017`>10000000 & `2017`<20000000)
-
 # STEPPING DENSITY VALUES OF COUNTRIES WORLD
 {
   DensityValues <- as.double(gsub(",","",as.character(countries_world$Density),fixed=TRUE))
@@ -159,8 +157,8 @@ growth <- gather(worldpop, "year", "WorldPopulation", 5:ncol(worldpop)) %>%
   mutate(percentage_growth = (WorldPopulation-lag(WorldPopulation))/lag(WorldPopulation)*100) %>%
   select(-Country)
 
-write.csv(file="Clean/growth_clean.csv", x=growth)
-nrow(growth)
+#write.csv(file="Clean/growth_clean.csv", x=growth)
+#nrow(growth)
 
 total_population_withNAs <- total_population %>%
   mutate(logArea = log(Area))
@@ -192,10 +190,11 @@ population_density <- total_population %>%
 
 nrow(total_population)
 nrow(population_density)
-write.csv(file="Clean/density_clean.csv", x=population_density)
-write.csv(file="Clean/density_clean_with_NAs.csv", x=population_density_with_NAS)
-write.csv(file="Clean/population_clean.csv", x=total_population)
-write.csv(file="Clean/population_clean_with_NAs.csv", x=total_population_withNAs)
+# write.csv(file="Clean/density_clean.csv", x=population_density)
+# write.csv(file="Clean/density_clean_with_NAs.csv", x=population_density_with_NAS)
+# write.csv(file="Clean/population_clean.csv", x=total_population)
+# write.csv(file="Clean/population_clean_with_NAs.csv", x=total_population_withNAs)
+# write.csv(file="Clean/fertility_clean.csv", x=fert)
  
 {
 pop_per_continent <- total_population[2:ncol(total_population)]%>%

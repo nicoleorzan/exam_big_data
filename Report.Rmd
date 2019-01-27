@@ -22,9 +22,9 @@ header-includes:
 - \definecolor{Orange}{HTML}{CF4A30}
 - \setbeamercolor{alerted text}{fg=Orange}
 - \setbeamercolor{frametitle}{bg=Purple}
-institute: University of Udine & University of Trieste
+institute: University of Trieste
 graphics: yes
-subtitle: Simulation, examples and exercises
+subtitle: Where are we going?
 fontsize: 10pt
  
 ---
@@ -35,7 +35,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 <figure>
 <a href="http://www.clker.com/clipart-530947.html">
-<img src="Images/overpop.jpg" style="position:absolute;top:0px;right:0px;" width=300 alt="Go to W3Schools!" border="0">
+<img src="Images/overpop.jpg" style="position:absolute;top:10px;right:10px;" width=300 alt="Go to W3Schools!" border="0">
 </a>
 </figure>
 
@@ -43,7 +43,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Never before in history, have there been so many people on Earth as right now. The number boosted in the years, from around 1 billion in the year 1800, to 7.5 billions in 2017.<br />
 
-Estimates of the population amount at earlier times have been done too: at the time agriculture emerged in around 10000 Before Christ, estimates of the world population ranged between 1 million and 15 million. Even earlier - about 70000 years ago - studies supports that humans may have gone through bottleneck of 1000 - 10000 people according to the thory of the Toba supervulcanic eruption$^{[1]}$.
+Estimates of the population amount at earlier times have been done too: at the time agriculture emerged in around 10000 Before Christ, the world population ranged between 1 million and 15 million. Even earlier - about 70000 years ago - studies supports that humans may have gone through bottleneck of 1000 - 10000 people according to the thory of the Toba supervulcanic eruption$^{[1]}$.
 
 Given the population growth of the last century, what should we expect for the next one? Will this lead to major changes in our lifestyle, or will this lead to wars, poverty problems, lack of primary resources and so on?<br />
 Or maybe all those are just unwarrant fears and everything is going to fix itself?
@@ -53,55 +53,85 @@ Or maybe all those are just unwarrant fears and everything is going to fix itsel
 
 ### Data Sources
 
-For this study I joined various dataset. I started from the dataset "Countries of the world" that you can find on Kaggle at https://www.kaggle.com/fernandol/countries-of-the-world, which contains free Data from the World Factbook.
+For this study I joined various dataset. 
 
-To analyze the situation in Italy also in earlier years (1700 - 1960) I added the data found here: http://www.populstat.info/Europe/italyc.htm<br />
+I started my analysis combining some datasets I found on the World Bank Open Data at https://data.worldbank.org/, where downloaded the collections of data regarding population amount, birthrate and deathrate (both over 1000 people) and the Gross Domestic Product of a Country; those datasets contain values about the relative indicators from 1960 to 2016 for (quite) every Country in the world, and they show some missing data.<br />
 
-To have an estimate of the world's population from year one AD, I took the data from here: www.ecology.com/population-estimates-year-2050/.
+To analyze the situation in Italy also in earlier years (1700 - 1960) I added the data found here: https://www.populstat.info/Europe/italyc.htm. <br />
 
-I decided to move forward my analysis combining those datasets to some additive ones I found on the World Bank Open Data at https://data.worldbank.org/, where I decided to download the collections of data regarding population amount, birthrate and deathrate (both over 1000 people) and the Gross Domestic Product of a Country; those datasets contain values about the relative indicators from 1960 to 2016 for (quite) every Country in the world, and they show some missing data.<br />
+To have an estimate of the world's population from year one AD, I took also data from here: https://www.ecology.com/population-estimates-year-2050/. <br />
 
-
-
-To analyze the data, I worked making use of different R packages: dplyr, leaflet, ggplot2, tidyr are the main names, but I used also geojsonio, rworldmap and countrycode for my parsing and leaflet plots, and htmlwidget and htmltools to save or plot some interactive maps.
+Finally, I used a bit also the dataset "Countries of the world" that you can find on Kaggle at https://www.kaggle.com/fernandol/countries-of-the-world, which allowed me to know some charachteristics of the different countries, but of those I actually used only the Region (which will be definede later) and the Area.
 
 
 ### Data Analysis
 
-Let's have first of all a look to the early ages of the human growth:
+To analyze the data I made use of different R packages: dplyr, leaflet, ggplot2, tidyr are the main names, but I used also geojsonio, rworldmap and countrycode to parse the data,  leaflet to create some plots, and htmlwidget and htmltools to save and plot some interactive maps.
+
+Let's start now to explore a bit our datasets.
+
+**Early Ages**
+
+First of all, let's have a look to the first stages of the human growth, from year 1 A.D. to 1800 A.D. (ann.us domini)
 
 ```{r, echo=FALSE, message=FALSE}
 library(plotly)
 library(readODS)
-early_years <- read.ods("Datasets/before.ods")
+early_years <- read.ods("Datasets/world_early_ages.ods")
 early_years <- data.frame(early_years)
 early_years <- early_years[2:nrow(early_years),]
 early_years[,1] <- as.integer(early_years[,1])
 early_years[,2] <- as.integer(early_years[,2])
 early_years[,3] <- as.integer(early_years[,3])
+colnames(early_years) <- c("year","low","high")
+early_years <- early_years %>%
+  mutate(average = (low+high)/2)
  
-p <- plot_ly(early_years, x = ~A, y = ~B, name = 'Lower Estimate', type = 'scatter', mode = 'lines+markers',width = 600, height = 400) %>%
-  add_trace(y = ~C, name = 'Upper Estimate', mode = 'lines+markers') %>%
-  layout(title = "World Population Estimation of Early Ages\n (200 D.C - 1800 D.C)",
-         xaxis = list(title = "Year"),
-         yaxis = list (title = "World Population (in millions)"))
-p 
+p <- plot_ly(early_years, x = ~year, y = ~high, type = 'scatter', mode = 'linesandmarkers', 
+            marker=list( size=5 , opacity=0.2, color='rgb(0, 0, 102)'),
+             line = list(color = 'rgb(180, 200, 250)'), 
+             showlegend = FALSE, name = "Higher Estimate") %>%
+  add_trace(y = ~low, type = 'scatter', mode = 'linesandmarkers', 
+            marker=list( size=5 , opacity=0.2, color='rgb(0, 0, 102)'), 
+            fill = 'tonexty', fillcolor='rgb(180, 200, 250)', 
+            line = list(color='transparent'),
+            showlegend = FALSE, name = "Lower Estimate") %>%
+  add_trace(x = ~year, y = ~average, type = 'scatter', mode = 'linesandmarkers', 
+            marker=list( size=5 , opacity=0.5, color='rgb(70,150,80)'),
+            line = list(color='rgb(0,150,0)'),marker=list( size=5 , opacity=0.5, color="black"),
+            name = '(Year, Avg)') %>%
+  layout(title = "World Population Estimation of Early Ages\n (1 A.D - 1800 A.D)",
+         paper_bgcolor='rgb(255,255,255)',
+         xaxis = list(title = "Years",
+                      #gridcolor = 'rgb(255,255,255)',
+                      showgrid = TRUE,
+                      showline = FALSE,
+                      showticklabels = TRUE,
+                      tickcolor = 'rgb(127,127,127)',
+                      ticks = 'outside',
+                      zeroline = FALSE),
+         yaxis = list(title = "World Population (in millions)",
+                      #gridcolor = 'rgb(255,255,255)',
+                      showgrid = TRUE,
+                      showline = FALSE,
+                      showticklabels = TRUE,
+                      tickcolor = 'rgb(127,127,127)',
+                      ticks = 'outside',
+                      zeroline = FALSE))
+p
 #<img src="https://plot.ly/~Niki23/132.png">
 ```
 
 To generate this plot, I just had to read a simple two-column table. I decided to use plotly, to have an interactive view of the data.<br />
-As we can see, there are a lower and an upper estimates for those values: in those ages, the world population starts to grow growing with a trend that seems quite exponential!
+As we can see, there are a lower and an upper estimates for those values: in those ages, the world population starts to grow with a trend that seems quite exponential.
 
-I think that I can try to have a logistic interpolation here.
+**World Bank Data**
 
-### World Bank Data
-
-
-Let's take a look to the datasets of World Bank Open Data: for semplicity I am gonna describe the "Total Population" dataset, the others are organized in the same way.
+Let's take a look to the datasets of World Bank Open Data.<br />
 When one decides to download an indicator from this site, ends up with three files: 
 
 * The first one is made only by a source note, which better describes the indicator: for "Total Population" we found : **Total population is based on the de facto definition of population, which counts all residents regardless of legal status or citizenship. The values shown are midyear estimates.**
-* In the second one we found a more precise descriptions for each Country. These are data that I have not used, though.
+* In the second one we found a more precise descriptions for each Country.
 * The third one is the real dataset, which contains the following columns:
     * "Country.Name"  
     * "Country.Code"   
@@ -423,8 +453,14 @@ As we can see from the plot, the PGR values are quite low, and in the last years
 
 
 
+## What are the Prospects?  
 
-## What are the Prospects?
+<br /><br /><br /><br /><br /><br />
+<figure>
+<a href="http://overpop2013.weebly.com/uploads/1/7/2/9/17291870/497887430.jpg">
+<img src="Images/popgrowth.jpg" style="position:absolute;top:6070px;right:300px;" width=350 alt="Go to W3Schools!" border="0">
+</a>
+</figure>
 
 Let's try to predict what will be the World's population in the next years. To do so, I will use the **Logistic model for Population Growth**, which can be described by the Pearl-Reed logistic equation:
 
@@ -440,7 +476,7 @@ It can be integrated, obtaining:
 $$
 N(t) = \frac{K N_0 e^{-rt}}{K + N_0(e^{-rt}-1)}
 $$
-Where $N_0$ is the starting situation.
+Where $N_0$ is the starting number of individuals.
 
 The main feature of the logistic model is that it takes the shape of a sigmoid curve and describes the growth of a population as an exponential followed by aa growth decrease, and bounded by the carrying capacity of the environment.
 
@@ -500,4 +536,5 @@ p1
 [4] https://www.ecology.com/population-estimates-year-2050/ (early ages)<br />
 [5] https://en.wikipedia.org/wiki/Demographic_transition<br />
 [6] https://en.wikipedia.org/wiki/Logistic_function<br />
-[7] http://www.clker.com/clipart-530947.html (clipart)
+[7] https://en.wikipedia.org/wiki/Projections_of_population_growth<br />
+[8] http://www.clker.com/clipart-530947.html (clipart)

@@ -13,9 +13,9 @@ birth_rate <- read.csv("Datasets/birth_rate.csv", skip=4)
 death_rate <- read.csv("Datasets/death_rate.csv", skip=4)
 tot_pop <- read.csv("Datasets/total_population.csv", skip=4)
 tot_pop2 <- read.csv("Datasets/pop_italy_earlyages.csv")
-#tot_pop2 <- tot_pop2[1:120,]
 
 dem_trans <- function(place) {
+  place <- "Italy"
   birth_rate <- birth_rate %>%
     filter(Country.Name==place)
   death_rate <- death_rate %>%
@@ -104,3 +104,31 @@ ggplot(full2, aes(x=y, y=p, colour=col)) +
         legend.text=element_text(size=13), legend.title=element_text(size=14))
 dev.off()
 
+
+## FERTILITY
+f <- read.csv("Clean/fertility_clean.csv")
+f <- f %>%
+  filter(Country=="World") %>%
+  select(-X, -Area, -Country, -Country.Code, -Region, -Continent)
+
+colnames(f) <- c( substring(colnames(f[,1:length(f)]), 2))
+fert <- gather(f, key="year", "fertility", 1:ncol(f))
+
+
+f1 <- list(
+  color = "lightgrey"
+)
+p4 <- plot_ly(fert, x = ~year, y = ~fertility, name = 'World Ferility Rate', type = 'scatter', mode = 'lines+markers',  
+              marker = list(
+  color = 'rgb(17, 157, 255)',
+  size = 20,
+  opacity=0.5,
+  line = list(
+    color = 'rgb(231, 99, 250)',
+    width = 2
+  )
+)) %>%
+  layout(title = "World Ferility Rate",
+         xaxis = list(title = "Year"),
+         yaxis = list (title = paste("PGR of ",place)))
+p4

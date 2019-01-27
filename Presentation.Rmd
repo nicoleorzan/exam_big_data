@@ -1,5 +1,5 @@
 ---
-title: "World Population Study"
+title: "World Population Analysis"
 author: "Nicole Orzan"
 date: "11 february 2019"
 output: ioslides_presentation
@@ -146,6 +146,32 @@ knitr::include_graphics("Images/pgn.png")
 ```
 </div>
 
+## What are the Prospects?  
+
+<figure>
+<a href="http://overpop2013.weebly.com/uploads/1/7/2/9/17291870/497887430.jpg">
+<img src="Images/popgrowth.jpg" style="position:absolute;top:50px;right:20px;" width=400 alt="Go to W3Schools!" border="0">
+</a>
+</figure>
+
+<font size="4">
+
+**Logistic model for Population Growth:**
+
+$$
+\frac{dN}{dt} = rN(1-\frac{N}{K})
+$$
+It can be integrated, obtaining:
+
+$$
+N(t) = \frac{K N_0 e^{-rt}}{K + N_0(e^{-rt}-1)}
+$$
+
+Where $N_0$ is the starting number of individuals.
+
+</font>
+
+
 ## Logistic model for Population Growth
 
 ```{r}
@@ -195,12 +221,17 @@ p1
 ```
 
 
+
 ## References and Data Sources
 
 <font size="4">
-[1] https://www.kaggle.com/fernandol/countries-of-the-world
-[2] https://data.worldbank.org/ <br />
-[3] https://www.ecology.com/population-estimates-year-2050/<br />
-[4] https://en.wikipedia.org/wiki/Demographic_transition<br />
+[1] https://en.wikipedia.org/wiki/Toba_catastrophe_theory<br />
+[2] https://www.kaggle.com/fernandol/countries-of-the-world<br />
+[3] https://data.worldbank.org/<br />
+[4] https://www.ecology.com/population-estimates-year-2050/ (early ages)<br />
+[5] https://en.wikipedia.org/wiki/Demographic_transition<br />
+[6] https://en.wikipedia.org/wiki/Logistic_function<br />
+[7] https://en.wikipedia.org/wiki/Projections_of_population_growth<br />
+[8] http://www.clker.com/clipart-530947.html (clipart)
 </font>
 

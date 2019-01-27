@@ -4,7 +4,6 @@
   library(tidyr)
   library(dplyr)
   library(plotly)
-  library(splines)
 }
 
 setwd('/home/nicole/Data Science/exam_big_data')
@@ -35,20 +34,25 @@ newdata$lm <- data.frame(lmod)
 #  select(lm, year)
 
 
-## LOGIT!! :)
+## Logistic model!! :)
 
 mod <- nls(world_pop ~ SSlogis(year, phi1, phi2, phi3), data = w)
+#summary(mod)
 pred <- predict(mod, newdata)
-pred[1:83]
+#pred[1:83]
 vv <- data.frame(pred)
 newdata$world_pop <- data.frame(pred[1:83])
 newdata <- newdata %>%
-  select(world_pop, year, -lm)
+  select(world_pop, year, lm)
 newdata$world_pop <- as.numeric(unlist(newdata$world_pop))
+newdata$lm <- as.numeric(unlist(newdata$lm))
+w$lm <- w$world_pop
 tot <- rbind(w, newdata)
 
-p1 <- plot_ly(tot, x = ~year, y = ~world_pop, name = 'popolation', type = 'scatter', mode = 'lines+markers') %>%
+p1 <- plot_ly(tot, x = ~year, y = ~world_pop, name = 'Logistic model', type = 'scatter', mode = 'lines+markers') %>%
+  add_trace(y = ~lm, name = 'Lineaar model', mode = 'lines+markers') %>%
   layout(title = "Predicted trend of world population growth until 2100",
          xaxis = list(title = "Year"),
-         yaxis = list (title = paste("Pop qunatity ")))
+         yaxis = list (title = paste("Pop quantity")))
+
 p1
