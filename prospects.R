@@ -3,13 +3,18 @@
   library(ggplot2)
   library(tidyr)
   library(dplyr)
+  library(readr)
   library(plotly)
 }
 
 setwd('/home/nicole/Data Science/exam_big_data')
-pop <- read.csv("Datasets/total_population.csv", skip=4)
+pop <- read.csv("Datasets/total_population.csv", skip=4, stringsAsFactors = FALSE)
+pop2 <- read_csv("Datasets/total_population.csv", skip=4)
+
 {
 w <- pop %>%
+  #filter(`Country Name`=="World")%>%
+  #select(-`Country Name`, -`Country Code`, -`Indicator Name`, -`Indicator Code`, -X63)
   filter(Country.Name=="World")%>%
   select(-Country.Name, -Country.Code, -Indicator.Name, -Indicator.Code, -X)
 colnames(w) <- c(substring(colnames(w[,1:length(w)]), 2))
