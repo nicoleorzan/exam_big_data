@@ -457,7 +457,7 @@ As we can see from the plot, the PGR values are always quite low from 1960 on, a
 ## What are the Prospects?  
 
 <div class="column-left">
-Let's move to the next point: we want to know if we can predict what will happen to the world population amount.
+Let's move to the point: we want to know if we can predict what will be the world population amount in the next few years, let's say, until 2100.
 </div>
 <div class="column-right">
 <figure>
@@ -465,7 +465,7 @@ Let's move to the next point: we want to know if we can predict what will happen
 <img src="Images/popgrowth.jpg" width=400  border="0"></a> </figure>
 <br /></div>
 
-And so, let's try to predict what will be the World's population in the next years. To do so, I will use the **Logistic model for Population Growth**, which can be described by the Pearl-Reed logistic equation:
+To do so, I will try to make a prediction using the **Logistic model for Population Growth**$^{[6]}$, which can be described by the Pearl-Reed differential equation:
 
 $$
 \frac{dN}{dt} = rN(1-\frac{N}{K})
@@ -482,9 +482,9 @@ N(t) = \frac{K N_0 e^{-rt}}{K + N_0(e^{-rt}-1)}
 $$
 Where $N_0$ is the starting number of individuals.
 
-The main feature of the logistic model is that it takes the shape of a sigmoid curve and describes the growth of a population as an exponential followed by aa growth decrease, and bounded by the carrying capacity of the environment.
+The main feature of the logistic model is that it takes the shape of a sigmoid curve and describes the growth of a population as an exponential followed by a growth decrease, and bounded by the carrying capacity of the environment.
 
-I used then the World Population data between 1960 and 2017 to try out this model and predict how much will the population be in 2100 (the code is inside the script prospects.R) ending with this graph:
+I used then the World Population data between 1960 and 2017 to try out this model and make the prediction (the code is inside the script prospects.R) ending with this graph:
 
 ```{r, echo=FALSE}
 pop <- read.csv("Datasets/total_population.csv", skip=4)
@@ -542,6 +542,7 @@ p1 <- plot_ly(tot, x = ~year, y = ~world_pop, name = 'popolation',
 p1
 ```
 
+This model is not perfect maybe, but...
 
 ## References
 [1] https://en.wikipedia.org/wiki/Toba_catastrophe_theory<br />
@@ -549,6 +550,6 @@ p1
 [3] https://data.worldbank.org/<br />
 [4] https://www.ecology.com/population-estimates-year-2050/ (early ages)<br />
 [5] https://en.wikipedia.org/wiki/Demographic_transition<br />
-[6] https://en.wikipedia.org/wiki/Logistic_function<br />
+[6] https://en.wikipedia.org/wiki/Logistic_function#In_ecology:_modeling_population_growth<br />
 [7] https://en.wikipedia.org/wiki/Projections_of_population_growth<br />
 [8] http://www.clker.com/clipart-530947.html (clipart)
