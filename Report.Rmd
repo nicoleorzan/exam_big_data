@@ -142,9 +142,8 @@ When one decides to download an indicator from this site, ends up with three fil
 Indicator Name and Code are quite useless for our scope, beacuse they are only a skimpy description of the table content. Country name and code are, on the other end, essential: each row of the table contains all the data for one single Country, for that indicator, for the 1960 - 2017 time frame.
 In the columns with the years as names, are then contained the actual useful data.
 
-
 I started with some data-parsing: I modified the year's columns to eliminate that 'X' in fromt of each year, then I eliminated rows or coluns which contained only NA values (not the ones which presented some NA's sometimes, to be clear).<br /> 
-Apart from this, we can say that those data frames are tidy: each variable is set in only one column, and each observations has its own row, if we consider each year as a variable on its own. In some of my later use, however, the "Year" will become a variable, and I will have to use the **gather** function to modify my dataset. <br />
+Apart from this, we can say that those data frames are tidy: the primary key is obviously present (the Country name), each variable is set in only one column, and each observations has its own row, if we consider each year as a variable on its own. In some of my later use, however, the "Year" will become a variable, and I will have to use the **gather** function to modify my dataset. <br />
 After thet, I decided then to add to each Country the "Continent" and "Region" variables (the last one indicates in which part of the Continent the Country is located), to chech trend of the selected indicators as a dependence of those. To do this I had to modify the dataset adding some column by means of dlpyr and the mutate command.
 This analysis can be found into the "Data_Cleaning.R" script file: I used it to parse the data and then to save the cleaned dataset, to work on them.
 
