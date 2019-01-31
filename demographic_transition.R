@@ -75,7 +75,9 @@ p1 <- plot_ly(full2, x = ~y, y = ~p, name = 'PGR', type = 'scatter', mode = 'lin
 layout(title = "Demoghraphic Transition: PGR",
          xaxis = list(title = "Year"),
          yaxis = list (title = paste("PGR of ",place)))
+
 p1
+
 italy <- tot_pop %>%
   filter(Country.Name==place)
 colnames(italy) <- c("Country", "Country.Code", "Indicator.Name", "Indicator.Code", substring(colnames(italy[,6:length(italy)-1]), 2), "X")
@@ -118,7 +120,8 @@ fert <- gather(f, key="year", "fertility", 1:ncol(f))
 f1 <- list(
   color = "lightgrey"
 )
-p4 <- plot_ly(fert, x = ~year, y = ~fertility, name = 'World Ferility Rate', type = 'scatter', mode = 'lines+markers',  
+p4 <- plot_ly(fert, x = ~year, y = ~fertility, name = 'World Ferility Rate', 
+              type = 'scatter', mode = 'lines+markers',  
               marker = list(
   color = 'rgb(17, 157, 255)',
   size = 20,

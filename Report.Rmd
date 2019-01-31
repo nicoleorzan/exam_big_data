@@ -1,7 +1,6 @@
 ---
 title: "World Population Analysis"
 author: "Nicole Orzan"
-date: "11 february 2019"
 output:   
   html_document:
     toc: yes
@@ -28,7 +27,18 @@ subtitle: Where are we going?
 fontsize: 10pt
  
 ---
-
+<style>
+.column-left{
+  float: left;
+  width: 50%;
+  text-align: left;
+}
+.column-right{
+  float: right;
+  width: 50%;
+  text-align: center;
+}
+</style>
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -300,8 +310,9 @@ m
 Now that we had a look to our data, let's move on to the main questions, and let's see what happened to the developing Countries in their past, to try to understand what is the direction of the World and their citizens.
 
 What happens when a poor country starts to walks throught welfare and moves to an industrialized economic system?
-The birth rate, which is usually high in a poor country, will no longer be compensated by the high death rate, and the population starts to grow. Then at a certain point, the fear about overpopulation starts to rise.<br />
-In 1929 the American demographer Warren Thompson developed the theory of the Demogrephic Transition$^{[3]}$, whereby happens a transition from high birth and death rates to lower birth and death rates.
+The birth rate, which is usually high in a poor country, will no longer be compensated by the high death rate, and the population starts to grow. Then at a certain point, the fear about overpopulation starts to rise.
+
+In 1929 the American demographer **Warren Thompson** developed the theory of the Demographic Transition model$^{[3]}$, which is based on the observation of changes - or transitions - from high birth and death rates to lower birth and death rates, during the industrial Growth of a Country.
 
 This theory can involve four to five stages of transition of the trend of population growth.
 Here's a summary of the five steps:
@@ -312,14 +323,15 @@ Here's a summary of the five steps:
 * **Stage Four**: Birth rates and death rates are both low, so population is stabilizing. Most of today's developed countries are in this stage;
 * **Stage Five** (possible stage): Here the birth rates have fallen below death rates, so the quantity of older people is bigger than the quantity of younger ones. 
 
+This is a model, consequently it is idealized and may not be accurate in every case, and so it remains to be seen if it can be applied to the less develop societies of today.
+
 Let's have a look at the situation in Italy, for example: in the graphs below you can see the trend of births, deaths, and the total population from 1960 to 2016.
 
-<br />
 
 ### Demographic Transition of Italy
 
-Usually, graphs talking about Demoghraphic Transition show togheter the data about death and birth rate of a Country, togheter with the population trend, into a certain time frame (<a href="https://en.wikipedia.org/wiki/Demographic_transition#/media/File:Demographic-TransitionOWID.png">Wikipedia example</a>)<br />
-Let's have a look at those quantities' trends in Italy:
+To find out what Stage of the Demoghraphic Tramsition a country is in, we can have a look at the progress of death rate and birth rate for it, togheter with the total population trend, into a certain time frame (<a href="https://en.wikipedia.org/wiki/Demographic_transition#/media/File:Demographic-TransitionOWID.png">Wikipedia example</a>). <br />
+Thanks to plotly, I ended up with those graphs:
 
 ```{r, echo=FALSE, message=FALSE}
 library(tidyr)
@@ -380,7 +392,9 @@ p
 ```
 
 <br />
-To have a better look at the situation I searched for a dataset which included also some previous years: here below it is shown the trend od total people starting from 1700.
+To check better the situation I searched for a dataset of the total population which included also data for the previous years: here below it's shown the total people's trend, starting from 1700, where the green shaded area includes the same time portion of the <span style="color:green">Population</span> graph here above.<br />
+Unfortunately, I didn't find also the birthrate and deathrate data.
+
 ``````{r, echo=FALSE, message=FALSE}
 tot_pop2 <- read.csv("Datasets/pop_italy_earlyages.csv")
 tot_pop2$pop = tot_pop2$pop*1000
@@ -400,17 +414,19 @@ p3
 ```
 
 <br />
-The green shaded are of the second graph includes the same area of the green-line graph above.
 
-Italy is currently in Stage 4 of the Demographic Transition Model: as we can see from the above graphics, we are having low birth rates and low death rates; moreover the **Population Growth Rate** (PGR) is low, causing the stabilization of the people amount.
+As we can see, the trend of birthrate it's descending over the years, while the one for the deathrate remained almost the same. The total population in growing, but in the nearest years the growth has slowed down a bit beacause the birth rate is descreased. It looks like Italy is into stage three of the model, but looking to some online resources (for example https://italyfogartyl.weebly.com/people-and-population.html) we can read "taly is currently in Stage 4 of the Demographic Transition Model (DTM). Stage 4 is characterized as having low birth rates, low death rates, and a low Population Growth Rate (PGR), causing the population to stabilize".<br />
+Let's have a look also to the **Population Growth Rate** (PGR), then! 
+PGR is defined like this:
 
 
 $$
 PGR = \frac{P(t_2) - P(t_1)}{P(t_1)(t_2 - t_1)}
 $$
 
-A positive outcome of the PGR indicates that the population is increasing, while a negative one indicates the decreasing of it. Moreover, a zero result means that the quantity has not changed in the selected amount of time.<br />
-Let's compute it on the data used above here, using as time interval the years.
+The PGR measures the rate at which the number of individuals in a population increases in a given time period. A positive outcome of this qunatity indicates that the population is increasing, while a negative one indicates the decreasing of it. Moreover, a zero result means that the quantity has not changed in the selected amount of time.<br />
+
+Let's compute it on the data used above here, using years difference as time intervals. Here you can see the outcome:
 
 
 ```{r pressure, echo=FALSE,  out.width = '50%'}
@@ -418,17 +434,11 @@ knitr::include_graphics("Images/pgn.png")
 ```
 
 
-As we can see from the plot, the PGR values are quite low, and in the last years (2015 - 2016) starts also to become negative. This is a good proof that Italy's population is starting to diminish, and so that Italy is currently standing into Stage Four of the Demographic Transiiton. 
+As we can see from the plot, the PGR values are always quite low from 1960 on, and in the last years (2015 - 2016) its values starts to become negative. This is a good proof that Italy's population is diminishing, and so that Italy is currently standing into Stage Four of the Demographic Transiiton. 
 
 
 
 
-
-
-<br />
-<br />
-<br />
-<br />
 
 
 
@@ -446,18 +456,21 @@ As we can see from the plot, the PGR values are quite low, and in the last years
 
 ## What are the Prospects?  
 
-<br /><br /><br /><br /><br /><br />
+<div class="column-left">
+Let's move to the next point: we want to know if we can predict what will happen to the world population amount.
+</div>
+<div class="column-right">
 <figure>
 <a href="http://overpop2013.weebly.com/uploads/1/7/2/9/17291870/497887430.jpg">
-<img src="Images/popgrowth.jpg" style="position:absolute;top:6070px;right:300px;" width=350 alt="Go to W3Schools!" border="0">
-</a>
-</figure>
+<img src="Images/popgrowth.jpg" width=400  border="0"></a> </figure>
+<br /></div>
 
-Let's try to predict what will be the World's population in the next years. To do so, I will use the **Logistic model for Population Growth**, which can be described by the Pearl-Reed logistic equation:
+And so, let's try to predict what will be the World's population in the next years. To do so, I will use the **Logistic model for Population Growth**, which can be described by the Pearl-Reed logistic equation:
 
 $$
 \frac{dN}{dt} = rN(1-\frac{N}{K})
 $$
+
 
 This formula is used to describe the self-limitations of growth of a biological population, and was first published (in a different form) in 1838 by Verhulst, who was a belgian mathematician and a statistician. Pearl and Reed popularized the equation in the twentieth century.<br />
 
@@ -512,7 +525,17 @@ newdata <- newdata %>%
 newdata$world_pop <- as.numeric(unlist(newdata$world_pop))
 tot <- rbind(w, newdata)
 
-p1 <- plot_ly(tot, x = ~year, y = ~world_pop, name = 'popolation', type = 'scatter', mode = 'lines+markers', width = 900, height = 350) %>%
+p1 <- plot_ly(tot, x = ~year, y = ~world_pop, name = 'popolation', 
+              type = 'scatter', mode = 'lines+markers', 
+              marker = list(
+  color = 'rgb(17, 157, 255)',
+  size = 10,
+  opacity=0.5,
+  line = list(
+    color = 'rgb(231, 99, 250)',
+    width = 2
+  )
+),width = 900, height = 350) %>%
   layout(title = "Predicted trend of world population growth until 2100",
          xaxis = list(title = "Year"),
          yaxis = list (title = paste("Population (Billions)")))
