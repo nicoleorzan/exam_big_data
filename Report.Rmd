@@ -171,12 +171,11 @@ To complete our understanding, let's now have a look at the distribution of the 
 
 ![](Images/continent_distribution.png){ width=75% ref="refe"}
 
-Given the "total population" dataset, I created a new one containing the density of people in the different Countries, to show it then on a map: to do so I keep the "Area" measure from the "countries_world" dataset took from Kaggle and I computed the density as the number of people over the area.<br />
+<br />
+Given the "total population" data, I created a new dataset containing the density of people in the different Countries, to show it then on a map: to do so I keep the "Area" measure from the "countries_world" dataset took from Kaggle and I computed the density as the number of people over the area. Then, I had to created a discrete scale of values to make a map work.<br />
 
-Obviously, I had to created a discrete scale of values to make a map work.
-
-Let's now have a look the the World's situation.
-Here below you can see a leaflet representation of the distribution of people in the whole world: I created then the leaflet interactive map using the code you can find into the "leaflet_map.R" script. For it, I had to perform other data arrangements because some Country's names where not exact for leaflet, so it did not show some data at all: for example, instead of "United States" it was expected "United States of America", so I had to check manually for a lot of names.
+Let's now have a look at the density map: here below you can see a leaflet representation of the distribution of people in the whole world. <br />
+For it, I had to perform other data arrangements because some Country's names where not exact for leaflet: for example, instead of "United States" it was expected "United States of America", so I had to check manually for a lot of Country names.
 
 
 ```{r, echo=FALSE, message=FALSE}
@@ -294,34 +293,33 @@ m
 ```
 
 
-
-**Gross domestic product**
-
-The GDP is defined as "an aggregate measure of production equal to the sum of the gross values added of all resident and institutional units engaged in production (plus any taxes, and minus any subsidies, on products not included in the value of their outputs).” And is considered the **"world's most powerful statistical indicator of national development and progress"**.
-
-
-
-
+<br /><br />
 
 ## Demographic Transition
 
+Now that we had a look to our data, let's move on to the main questions, and let's see what happened to the developing Countries in their past, to try to understand what is the direction of the World and their citizens.
+
 What happens when a poor country starts to walks throught welfare and moves to an industrialized economic system?
-The birth rate, which is usually high in a poor country, will no longer be compensated by the high death rate, and the population starts to grow. Then at a certain point, the fear about overpopulation starts to rise.< br\>
-In 1929 the American demographer Warren Thompson developed the theory of the Demogrephic Transition[3], whereby happens a transition from high birth and death rates to lower birth and death rates.
+The birth rate, which is usually high in a poor country, will no longer be compensated by the high death rate, and the population starts to grow. Then at a certain point, the fear about overpopulation starts to rise.<br />
+In 1929 the American demographer Warren Thompson developed the theory of the Demogrephic Transition$^{[3]}$, whereby happens a transition from high birth and death rates to lower birth and death rates.
 
 This theory can involve four to five stages of transition of the trend of population growth.
 Here's a summary of the five steps:
 
-* **Stage One**: pre-Industrial Revolution, birth rates and death rates are both high; in general the level of the population stays the same;
-* **Stage Two**: in a developing country death rates tents to diminish while birth rates stay high: population is growing;
-* **Stage Three**: thanks to the better economic and living conditions, births starts to decrease (a big point here is due to introduction of contraception)
-* **Stage Four**: birth rates and death rates are both low, so population is stabilizing. Most of today's developed countries are in this stage;
-* **Stage Five** (possible stage): here the birth rates have fallen below death rates, so the quantity of older people is bigger than the quantity of younger ones. 
+* **Stage One**: Pre-Industrial Revolution, birth rates and death rates are both high, in general the level of the population stays the same;
+* **Stage Two**: In a developing country death rates tents to diminish while birth rates stay high: population is growing;
+* **Stage Three**: Thanks to the better economic and living conditions, births starts to decrease (a big point here is due to introduction of contraception);
+* **Stage Four**: Birth rates and death rates are both low, so population is stabilizing. Most of today's developed countries are in this stage;
+* **Stage Five** (possible stage): Here the birth rates have fallen below death rates, so the quantity of older people is bigger than the quantity of younger ones. 
 
 Let's have a look at the situation in Italy, for example: in the graphs below you can see the trend of births, deaths, and the total population from 1960 to 2016.
 
+<br />
 
-### Demographic Transition in Italy
+### Demographic Transition of Italy
+
+Usually, graphs talking about Demoghraphic Transition show togheter the data about death and birth rate of a Country, togheter with the population trend, into a certain time frame (<a href="https://en.wikipedia.org/wiki/Demographic_transition#/media/File:Demographic-TransitionOWID.png">Wikipedia example</a>)<br />
+Let's have a look at those quantities' trends in Italy:
 
 ```{r, echo=FALSE, message=FALSE}
 library(tidyr)

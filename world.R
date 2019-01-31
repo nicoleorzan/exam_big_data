@@ -8,8 +8,6 @@
 
 # {
 #   library(rworldmap)
-#   library(countrycode)
-#   library(RColorBrewer)
 #   library(ggmap)
 #   library(geojsonio)
 #   library(rgdal)
@@ -144,6 +142,15 @@ countries_world %>%
   arrange(Population) %>%
   select(Country, Region, Population)
 
+# Let's see how much population on total area per continent:
+countries_world %>%
+  group_by(Continent) %>%
+  mutate(Continent_Area_km2 = sum(Area)*2.589988,Continent_Pop = sum(as.numeric(Population))) %>%
+  mutate(Continent_Density_ppl_on_km2 = Continent_Pop/Continent_Area_km2) %>%
+  select(Continent_Area_km2, Continent_Pop, Continent_Density_ppl_on_km2 , everything())%>%
+  distinct(Continent_Area_km2, Continent_Pop, Continent_Density_ppl_on_km2) %>%
+  arrange(desc(Continent_Area_km2))
+
 
 # DENSITY VALUES OF COUNTRIES WORLD
 {
@@ -158,7 +165,6 @@ countries_world %>%
     countries_world$StepDensity[val]=i
   }
 }
-
 
 
 ##################  SOME STARTING SIMPLE PLOTS #####################
@@ -201,15 +207,6 @@ ggplot(partial, aes(x=Continent, y=2017, fill=Region))+
 #dev.off()
 
 
-# Let's see how much population on m^2
-# Total area per continent:
-areas <- countries_world %>%
-  group_by(Continent) %>%
-  mutate(Continent_Area_km2 = sum(Area)*2.589988,Continent_Pop = sum(as.numeric(Population))) %>%
-  mutate(Continent_Density_ppl_on_km2 = Continent_Pop/Continent_Area_km2) %>%
-  select(Continent_Area_km2, Continent_Pop, Continent_Density_ppl_on_km2 , everything())%>%
-  distinct(Continent_Area_km2, Continent_Pop, Continent_Density_ppl_on_km2) %>%
-arrange(desc(Continent_Area_km2))
 
 
 #####################################################
@@ -317,18 +314,8 @@ DensMap <- joinCountryData2Map(DensDF, joinCode = "ISO3",nameJoinColumn = "count
 mapCountryData(DensMap, nameColumnToPlot="Density", catMethod = "categorical",
                missingCountryCol = gray(.8))
 
-
-### WORLD PLOT GDP index
-GDP_DF <- data.frame(country = countries_world$Country.Code, GDP = countries_world$GDP....per.capita.)
-GDPMap <- joinCountryData2Map(GDP_DF, joinCode = "ISO3",nameJoinColumn = "country")
-
-mapCountryData(GDPMap, nameColumnToPlot="GDP", catMethod = "fixedWidth",
-               missingCountryCol = gray(.8), numCats=10, colourPalette = "terrain")
-
-
-
-#####################################
-#####################################
+###########################################
+########### OTHER VARIOUS TRIALS ###########
 
 # MORLD MAP IN YEARS 1960, 2017
 library(rworldmap)
