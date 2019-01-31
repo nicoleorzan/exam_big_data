@@ -10,7 +10,7 @@
   library(maps)
 }
 
-map("world", fill=TRUE, col="white", bg="lightblue", ylim=c(-60, 90), mar=c(0,0,0,0))
+#map("world", fill=TRUE, col="white", bg="lightblue", ylim=c(-60, 90), mar=c(0,0,0,0))
 
 setwd('/home/nicole/Data Science/exam_big_data/Clean')
 # LOAD CLEANED AND MODIFIED DATASETS

@@ -43,7 +43,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Never before in history, have there been so many people on Earth as right now. The number boosted in the years, from around 1 billion in the year 1800, to 7.5 billions in 2017.<br />
 
-Estimates of the population amount at earlier times have been done too: at the time agriculture emerged in around 10000 Before Christ, the world population ranged between 1 million and 15 million. Even earlier - about 70000 years ago - studies supports that humans may have gone through bottleneck of 1000 - 10000 people according to the thory of the Toba supervulcanic eruption$^{[1]}$.
+Estimates of the population amount at earlier times have been done too: at the time agriculture emerged in around 10.000 Before Christ, the world population ranged between 1 million and 15 million. Even earlier - about 70.000 years ago - studies supports that humans may have gone through bottleneck of 1000 - 10000 people according to the thory of the Toba supervulcanic eruption$^{[1]}$.
 
 Given the population growth of the last century, what should we expect for the next one? Will this lead to major changes in our lifestyle, or will this lead to wars, poverty problems, lack of primary resources and so on?<br />
 Or maybe all those are just unwarrant fears and everything is going to fix itself?
@@ -55,24 +55,24 @@ Or maybe all those are just unwarrant fears and everything is going to fix itsel
 
 For this study I joined various dataset. 
 
-I started my analysis combining some datasets I found on the World Bank Open Data at https://data.worldbank.org/, where downloaded the collections of data regarding population amount, birthrate and deathrate (both over 1000 people) and the Gross Domestic Product of a Country; those datasets contain values about the relative indicators from 1960 to 2016 for (quite) every Country in the world, and they show some missing data.<br />
+I started my analysis using some datasets I found on the World Bank Open Data at https://data.worldbank.org/, where I downloaded the collections of data regarding population amount, Birthrate and Deathrate (both normalized over 1.000 people) and the Fertility of a Country; those datasets contain values about the relative indicators from 1960 to 2016 for (quite) every Country in the world, and they show some missing data.<br />
 
 To analyze the situation in Italy also in earlier years (1700 - 1960) I added the data found here: https://www.populstat.info/Europe/italyc.htm. <br />
 
-To have an estimate of the world's population from year one AD, I took also data from here: https://www.ecology.com/population-estimates-year-2050/. <br />
+To have an estimate of the world's population from year one AD (annus domini), I took also data from here: https://www.ecology.com/population-estimates-year-2050/. <br />
 
-Finally, I used a bit also the dataset "Countries of the world" that you can find on Kaggle at https://www.kaggle.com/fernandol/countries-of-the-world, which allowed me to know some charachteristics of the different countries, but of those I actually used only the Region (which will be definede later) and the Area.
+Finally, I used a bit also the dataset "Countries of the world" that you can find on Kaggle at https://www.kaggle.com/fernandol/countries-of-the-world, which contains some geographic charachteristics of the different countries, but of those I actually used only the Region (which I will better define later) and the Area.
 
 
 ### Data Analysis
 
-To analyze the data I made use of different R packages: dplyr, leaflet, ggplot2, tidyr are the main names, but I used also geojsonio, rworldmap and countrycode to parse the data,  leaflet to create some plots, and htmlwidget and htmltools to save and plot some interactive maps.
+To analyze the data I made use of different R packages: dplyr, leaflet, ggplot2, tidyr and stringr are the main names, but I used also geojsonio, rworldmap and countrycode to parse the data, leaflet to create some plots, and htmlwidget and htmltools to save and plot some interactive maps.
 
 Let's start now to explore a bit our datasets.
 
 **Early Ages**
 
-First of all, let's have a look to the first stages of the human growth, from year 1 A.D. to 1800 A.D. (ann.us domini)
+First of all, let's have a look to the first stages of the human growth, from year 1 A.D. to 1800 A.D.
 
 ```{r, echo=FALSE, message=FALSE}
 library(plotly)
@@ -122,65 +122,58 @@ p
 #<img src="https://plot.ly/~Niki23/132.png">
 ```
 
-To generate this plot, I just had to read a simple two-column table. I decided to use plotly, to have an interactive view of the data.<br />
-As we can see, there are a lower and an upper estimates for those values: in those ages, the world population starts to grow with a trend that seems quite exponential.
+To generate this plot, I just had to read a simple three-columns table. I decided to use plotly, to have an interactive view of the data.<br />
+The table contains a lower estimate and the upper estimate of the world population in the years that you can read on the graph. As you can see, we started from year one with a mean value of 285 millions of individuals, number which then grew up to around 1.6 billions in 1900: in those ages, the world population starts to grow with a trend that seems quite exponential <br /><br />
 
 **World Bank Data**
 
 Let's take a look to the datasets of World Bank Open Data.<br />
 When one decides to download an indicator from this site, ends up with three files: 
 
-* The first one is made only by a source note, which better describes the indicator: for "Total Population" we found : **Total population is based on the de facto definition of population, which counts all residents regardless of legal status or citizenship. The values shown are midyear estimates.**
-* In the second one we found a more precise descriptions for each Country.
+* The first one is made only by a source note, which better describes the choosen indicator: for "Total Population" we found : **Total population is based on the de facto definition of population, which counts all residents regardless of legal status or citizenship. The values shown are midyear estimates**;
+* In the second one we found a more precise descriptions for each Country;
 * The third one is the real dataset, which contains the following columns:
-    * "Country.Name"  
-    * "Country.Code"   
-    * "Indicator.Name" 
-    * "Indicator.Code"
-    * years from 1960 to 2017 in the form "X1960"
+    * "Country Name"  
+    * "Country Code"   
+    * "Indicator Name" 
+    * "Indicator Code"
+    * years from 1960 to 2017
 
-Indicator Name and Code are quite useless for our scope, beacuse they are only a skimpy description of the table content. Country name and code are, on the other end, essential: each row of the table contains all the data for one single Country, for that indicator, for the 1960 - 2017 time frame.
-In the columns with the years as names, are then contained the actual useful data.
+Indicator Name and Code are quite useless for our scope, beacuse they are only a skimpy description of the table content. Country name and code are instead essential: each observation (row) of the table contains all the data values for one single Country, for the 1960 - 2017 time frame.
 
-I started with some data-parsing: I modified the year's columns to eliminate that 'X' in fromt of each year, then I eliminated rows or coluns which contained only NA values (not the ones which presented some NA's sometimes, to be clear).<br /> 
-Apart from this, we can say that those data frames are tidy: the primary key is obviously present (the Country name), each variable is set in only one column, and each observations has its own row, if we consider each year as a variable on its own. In some of my later use, however, the "Year" will become a variable, and I will have to use the **gather** function to modify my dataset. <br />
-After thet, I decided then to add to each Country the "Continent" and "Region" variables (the last one indicates in which part of the Continent the Country is located), to chech trend of the selected indicators as a dependence of those. To do this I had to modify the dataset adding some column by means of dlpyr and the mutate command.
-This analysis can be found into the "Data_Cleaning.R" script file: I used it to parse the data and then to save the cleaned dataset, to work on them.
+We can say that those data frames are tidy: the primary key is obviously present (the Country name, but also the Code can be used), each observations has its own row, and each variable is set in only one column, if we consider each year as a variable on its own. In some of my later use, however, the "Year" will become a variable, and I will have to use the **gather** function to modify my dataset. <br />
+The only thing I had to do to "tidy" my data, was to eliminate some rows or columns which contained only NA values.<br /> 
+An important thing to say, is that this dataset contains also some non-Country data, inserted as rows into the dataset: as an example, there is the row "World". It was not necessary to eliminate them, but it was needed to be aware they were present.
 
-I proceeded then checking the data about the World's amount of population in different years, to verify if the outcome values were consistent with the well-known effective numbers: I used again dplyr's commands to select and count data, doing something like:
+I decided at this point to add to each Country the "Continent" and "Region" variables (the last one indicates the part of the Continent in which the Country is located), to chech the trend of the selected indicators as a dependence of those. To do this I had to modify the dataset adding some column by means of dlpyr and the mutate command.<br /> 
+This analysis done here above were made for all the dataset downloaded from the world bank, and can be found in the first part of the "world.R" script file.
+<br /><br />
 
-```
-total_population %>%
-    select(Country, `1960`) %>%
-    filter(Country=="World")
-```
+**Population Growth Trend**
 
-As you can see, also the "World" data is a row of our dataset.<br />
-I had to be careful, so: apart from "World" also other non-Country data were inserted as rows into the dataset. Indeed, when I did my first tests, things didn't add up!
-
-What is the trend for the world population in the last years? I decided to plot it, but to have a better analysis I plotit next to the Percentage of growth for every year of the whole world, computed as:
+So, first big question: what is the trend of the world population growth in these last years? I decided to plot it, but to have a deeper understanding of the growth process, I had a look also at the Percentage of growth for every year, computed as:
 
 $$
-GrowthPercentage = \frac{P_{t}-P{t_0}}{P_{t}} \cdot 100
+GrowthPercentage = \frac{P_{t}-P_{t-1}}{P_{t}} \cdot 100
 $$
 
-Where $P_{t}$ represents the population in a certain year and $P_{t_0}$ the population at the preceeding year.
+Where $P_{t}$ represents the population in a certain year and $P_{t-1}$ the population in the preceeding year.
 
 ![](Images/pop_number2.png){ width=47% } ![](Images/pop_growth2.png){ width=47% }
 
+So, the population is still growing, but the growth rate is falling down quickly, it seems: it went from around 2.0% to 1.0% within 57 years! This is a good news.
+<br /><br />
 
-With the image here below we can have a sight at the distribution of the people around the Continents and the different Regions in 2017.
+**Population Distribution**
+
+To complete our understanding, let's now have a look at the distribution of the people around the Continents and the different Regions in 2017. I made a check in different years, but the distribution is always quite the same, so I report here plot only for the year 2017.
+<br />
 
 ![](Images/continent_distribution.png){ width=75% ref="refe"}
-
-**Density Indicator**
 
 Given the "total population" dataset, I created a new one containing the density of people in the different Countries, to show it then on a map: to do so I keep the "Area" measure from the "countries_world" dataset took from Kaggle and I computed the density as the number of people over the area.<br />
 
 Obviously, I had to created a discrete scale of values to make a map work.
-
-
-**Leaflet**
 
 Let's now have a look the the World's situation.
 Here below you can see a leaflet representation of the distribution of people in the whole world: I created then the leaflet interactive map using the code you can find into the "leaflet_map.R" script. For it, I had to perform other data arrangements because some Country's names where not exact for leaflet, so it did not show some data at all: for example, instead of "United States" it was expected "United States of America", so I had to check manually for a lot of names.
