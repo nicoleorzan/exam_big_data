@@ -53,7 +53,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Never before in history, have there been so many people on Earth as right now. The number boosted in the years, from around 1 billion in the year 1800, to 7.5 billions in 2017.<br />
 
-Estimates of the population amount at earlier times have been done too: at the time agriculture emerged in around 10.000 Before Christ, the world population ranged between 1 million and 15 million. Even earlier - about 70.000 years ago - studies supports that humans may have gone through bottleneck of 1000 - 10000 people according to the thory of the Toba supervulcanic eruption$^{[1]}$.
+Estimates of the population amount at earlier times have been done too: at the time agriculture emerged in around 10.000 Before Christ, the world population ranged between 1 million and 15 million. Even earlier - about 70.000 years ago - studies supports that humans may have gone through bottleneck of 1000 - 10000 people according to the thory of the Toba supervulcanic eruption<a href="#tag">$^{[1]}$</a>.
 
 Given the population growth of the last century, what should we expect for the next one? Will this lead to major changes in our lifestyle, or will this lead to wars, poverty problems, lack of primary resources and so on?<br />
 Or maybe all those are just unwarrant fears and everything is going to fix itself?
@@ -169,7 +169,7 @@ $$
 
 Where $P_{t}$ represents the population in a certain year and $P_{t-1}$ the population in the preceeding year.
 
-![](Images/pop_number2.png){ width=47% } ![](Images/pop_growth2.png){ width=47% }
+![](Images/pop_number2.png){ width=49% } ![](Images/pop_growth2.png){ width=49% }
 
 So, the population is still growing, but the growth rate is falling down quickly, it seems: it went from around 2.0% to 1.0% within 57 years! This is a good news.
 <br /><br />
@@ -307,12 +307,12 @@ m
 
 ## Demographic Transition
 
-Now that we had a look to our data, let's move on to the main questions, and let's see what happened to the developing Countries in their past, to try to understand what is the direction of the World and their citizens.
+Now that we had a look to our data, let's move on to the main questions, and let's see what happened to the developing Countries in their past, to understand what is the direction of the World and their citizens.
 
 What happens when a poor country starts to walks throught welfare and moves to an industrialized economic system?
 The birth rate, which is usually high in a poor country, will no longer be compensated by the high death rate, and the population starts to grow. Then at a certain point, the fear about overpopulation starts to rise.
 
-In 1929 the American demographer **Warren Thompson** developed the theory of the Demographic Transition model$^{[3]}$, which is based on the observation of changes - or transitions - from high birth and death rates to lower birth and death rates, during the industrial Growth of a Country.
+In 1929 the American demographer **Warren Thompson** developed the theory of the Demographic Transition model<a href="#tag">$^{[3]}$</a>, which is based on the observation of changes - or transitions - from high birth and death rates to lower birth and death rates, during the industrial Growth of a Country.
 
 This theory can involve four to five stages of transition of the trend of population growth.
 Here's a summary of the five steps:
@@ -330,7 +330,7 @@ Let's have a look at the situation in Italy, for example: in the graphs below yo
 
 ### Demographic Transition of Italy
 
-To find out what Stage of the Demoghraphic Tramsition a country is in, we can have a look at the progress of death rate and birth rate for it, togheter with the total population trend, into a certain time frame (<a href="https://en.wikipedia.org/wiki/Demographic_transition#/media/File:Demographic-TransitionOWID.png">Wikipedia example</a>). <br />
+To find out what Stage of the Demoghraphic Transition a country is in, we can have a look at the progress of death rate and birth rate for it, togheter with the total population trend, into a certain time frame (<a href="https://en.wikipedia.org/wiki/Demographic_transition#/media/File:Demographic-TransitionOWID.png">Wikipedia example</a>). <br />
 Thanks to plotly, I ended up with those graphs:
 
 ```{r, echo=FALSE, message=FALSE}
@@ -392,8 +392,7 @@ p
 ```
 
 <br />
-To check better the situation I searched for a dataset of the total population which included also data for the previous years: here below it's shown the total people's trend, starting from 1700, where the green shaded area includes the same time portion of the <span style="color:green">Population</span> graph here above.<br />
-Unfortunately, I didn't find also the birthrate and deathrate data.
+To check better the situation I searched for a dataset of the total population which included also data for the previous years: here below it's shown the total people's trend, starting from 1700, where the green shaded area includes the same time portion of the <span style="color:green">Population</span> graph here above (unfortunately, I didn't find also the birthrate and deathrate data). <br />
 
 ``````{r, echo=FALSE, message=FALSE}
 tot_pop2 <- read.csv("Datasets/pop_italy_earlyages.csv")
@@ -415,18 +414,18 @@ p3
 
 <br />
 
-As we can see, the trend of birthrate it's descending over the years, while the one for the deathrate remained almost the same. The total population in growing, but in the nearest years the growth has slowed down a bit beacause the birth rate is descreased. It looks like Italy is into stage three of the model, but looking to some online resources (for example https://italyfogartyl.weebly.com/people-and-population.html) we can read "taly is currently in Stage 4 of the Demographic Transition Model (DTM). Stage 4 is characterized as having low birth rates, low death rates, and a low Population Growth Rate (PGR), causing the population to stabilize".<br />
-Let's have a look also to the **Population Growth Rate** (PGR), then! 
-PGR is defined like this:
+As we can see, the trend of birthrate it's descending over the years, while the one for the deathrate remained almost the same. The total population in growing, but in the last years the growth has slowed down a bit beacause the birth rate is descreased. It looks like Italy is into stage three of the model, but looking to some online resources (for example https://italyfogartyl.weebly.com/people-and-population.html) we can read: *"Italy is currently in Stage 4 of the Demographic Transition Model (DTM). Stage 4 is characterized as having low birth rates, low death rates, and a low Population Growth Rate (PGR), causing the population to stabilize"*.
+
+Let's then have a look to the **Population Growth Rate** (PGR), which is defined like this:
 
 
 $$
 PGR = \frac{P(t_2) - P(t_1)}{P(t_1)(t_2 - t_1)}
 $$
 
-The PGR measures the rate at which the number of individuals in a population increases in a given time period. A positive outcome of this qunatity indicates that the population is increasing, while a negative one indicates the decreasing of it. Moreover, a zero result means that the quantity has not changed in the selected amount of time.<br />
+The PGR measures the rate at which the number of individuals in a population increases in a given time period. A positive outcome of this quantity indicates that the population is increasing, while a negative one indicates the decreasing of it. Moreover, a zero result means that the quantity has not changed.<br />
 
-Let's compute it on the data used above here, using years difference as time intervals. Here you can see the outcome:
+Let's compute the PGR on the Italy's data used above, using years difference as time intervals. Here you can see the outcome:
 
 
 ```{r pressure, echo=FALSE,  out.width = '50%'}
@@ -462,10 +461,10 @@ Let's move to the point: we want to know if we can predict what will be the worl
 <div class="column-right">
 <figure>
 <a href="http://overpop2013.weebly.com/uploads/1/7/2/9/17291870/497887430.jpg">
-<img src="Images/popgrowth.jpg" width=400  border="0"></a> </figure>
+<img src="Images/popgrowth.jpg" width=430  border="0"></a> </figure>
 <br /></div>
 
-To do so, I will try to make a prediction using the **Logistic model for Population Growth**$^{[6]}$, which can be described by the Pearl-Reed differential equation:
+To do so, I will try to make a prediction using the **Logistic model for Population Growth**<a href="#tag">$^{[6]}$</a>,  which can be described by the Pearl-Reed differential equation:
 
 $$
 \frac{dN}{dt} = rN(1-\frac{N}{K})
@@ -541,10 +540,18 @@ p1 <- plot_ly(tot, x = ~year, y = ~world_pop, name = 'popolation',
          yaxis = list (title = paste("Population (Billions)")))
 p1
 ```
+<br />
+As we expected, according to this model, the population is likely going to grow in the next few years. 
 
-This model is not perfect maybe, but...
+Obviously this is just an easy trial of the model, where I have modeled the growth until 2100 according to the growth of the last years (so using the world population as a function of time).
+Maybe the prediction can be improved in some way by inserting more predictors (like birthrates, dearthreats, fertility, and others).
 
+However according to some online resources, my prediction does not seem so bad: for example, the  <a href="https://www.un.org/development/desa/en/news/population/world-population-prospects-2017.html ">United Nations Department of Economic and Social Affairs</a>. predicted the world population to reach 9.8 billion in 2050 and 11.2 billion in 2100.
+
+
+<p id="tag">
 ## References
+</p>
 [1] https://en.wikipedia.org/wiki/Toba_catastrophe_theory<br />
 [2] https://www.kaggle.com/fernandol/countries-of-the-world<br />
 [3] https://data.worldbank.org/<br />

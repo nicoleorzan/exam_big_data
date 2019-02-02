@@ -10,21 +10,40 @@
 setwd('/home/nicole/Data Science/exam_big_data')
 pop <- read.csv("Datasets/total_population.csv", skip=4, stringsAsFactors = FALSE)
 pop2 <- read_csv("Datasets/total_population.csv", skip=4)
+fer <- read.csv("Datasets/fertility.csv", skip=4)
 
 {
-w <- pop %>%
-  #filter(`Country Name`=="World")%>%
-  #select(-`Country Name`, -`Country Code`, -`Indicator Name`, -`Indicator Code`, -X63)
-  filter(Country.Name=="World")%>%
-  select(-Country.Name, -Country.Code, -Indicator.Name, -Indicator.Code, -X)
-colnames(w) <- c(substring(colnames(w[,1:length(w)]), 2))
-colnames(w)
-w[2,]<- colnames(w)
-w <- data.frame(t(w))
-colnames(w) <- c("world_pop", "year")
+  clean <- function(ds){
+    a <- ds %>%
+      #filter(`Country Name`=="World")%>%
+      #select(-`Country Name`, -`Country Code`, -`Indicator Name`, -`Indicator Code`, -X63)
+      filter(Country.Name=="World")%>%
+      select(-Country.Name, -Country.Code, -Indicator.Name, -Indicator.Code, -X)
+    
+    colnames(a) <- c(substring(colnames(a[,1:length(a)]), 2))
+    
+    return(a)
+  }
 
-w$world_pop <- as.numeric(as.character(w$world_pop))
-w$year <- as.numeric(as.character(w$year))
+#   w <- pop %>%
+#   #filter(`Country Name`=="World")%>%
+#   #select(-`Country Name`, -`Country Code`, -`Indicator Name`, -`Indicator Code`, -X63)
+#   filter(Country.Name=="World")%>%
+#   select(-Country.Name, -Country.Code, -Indicator.Name, -Indicator.Code, -X)
+# colnames(w) <- c(substring(colnames(w[,1:length(w)]), 2))
+# colnames(w)
+  w <- clean(pop)
+  f <- clean(fer)
+  
+  w[2,]<- colnames(w)
+  w <- data.frame(t(w))
+  colnames(w) <- c("world_pop", "year")
+  
+  w$world_pop <- as.numeric(as.character(w$world_pop))
+  w$year <- as.numeric(as.character(w$year))
+  w <- w[-59]
+  #w$fert <- as.numeric(as.character(f[1,]))
+
 }
 
 newdata <- seq(2018,2100)
