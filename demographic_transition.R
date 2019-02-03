@@ -77,8 +77,8 @@ p_pop <- plot_ly(tot_pop2, x = ~year, y = ~pop, name = 'population', type = 'sca
                             y0 = 400, y1 = 60000000, yref = "y")) )
 
 p_pop
-chart_link = api_create(p_pop, filename="tot_pop_green", sharing="public")
-chart_link
+#chart_link = api_create(p_pop, filename="tot_pop_green", sharing="public")
+#chart_link
 
 #=================================================================
 # PGR
@@ -126,7 +126,7 @@ ggplot(full2, aes(x=y, y=p, colour=col)) +
 dev.off()
 
 #=======================================================
-## FERTILITY
+## FERTILITY - NOT USED IN REPORT
 f <- read.csv("Clean/fertility_clean.csv")
 i <- read.csv("Clean/clean_immuniz.csv")
 cleaning <- function(f, name){
@@ -143,28 +143,8 @@ cleaning <- function(f, name){
 
 fert <- cleaning(f, "fertility")
 imm <- cleaning(i, "immuniz")
-# f <- f %>%
-#   filter(Country=="World") %>%
-#   select(-X, -Area, -Country, -Country.Code, -Region, -Continent)
-# 
-# i <- i %>%
-#   filter(Country=="World") %>%
-#   select(-X, -Area, -Country, -Country.Code, -Region, -Continent)
-# 
-# colnames(f) <- c( substring(colnames(f[,1:length(f)]), 2))
-# colnames(i) <- c( substring(colnames(i[,1:length(i)]), 2))
-# 
-# fert <- gather(f, key="year", "fertility", 1:ncol(f))
-# imm <- gather(i, key="year", "immunization", 1:ncol(i))
 colnames(imm)[2] <- "immunization"
 colnames(fert)[2] <- "fertility"
-
-merged <- left_join(fert, imm, by="year")
-
-ggplot(data = merged) +
-  geom_line(aes(x=year, y=fertility))+
-  geom_line(aes(x=year, y=immunization))
-
 
 f1 <- list(
   color = "lightgrey"
@@ -172,17 +152,25 @@ f1 <- list(
 p4 <- plot_ly(fert, x = ~year, y = ~fertility, name = 'World Ferility Rate', 
               type = 'scatter', mode = 'lines+markers',  
               marker = list(
-  color = 'rgb(47,27, 255)',
-  size = 20,
-  opacity=0.7,
-  line = list(
-    color = 'rgb(21, 230, 180)',
-    width = 3
-  )
-)) %>%
+                color = 'rgb(47,27, 255)',
+                size = 20,
+                opacity=0.7,
+                line = list(
+                  color = 'rgb(21, 230, 180)',
+                  width = 3
+                )
+              )) %>%
   layout(title = "World Ferility Rate",
          xaxis = list(title = "Year"),
          yaxis = list (title = paste("PGR of ",place)))
 p4
-chart_link = api_create(p4, filename="fertility", sharing="public")
-chart_link
+#chart_link = api_create(p4, filename="fertility", sharing="public")
+#chart_link
+
+
+merged <- left_join(fert, imm, by="year")
+
+ggplot(data = merged) +
+  geom_line(aes(x=year, y=fertility))+
+  geom_line(aes(x=year, y=immunization))
+

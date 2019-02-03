@@ -6,13 +6,6 @@
   library(stringr)
 }
 
-# {
-#   library(rworldmap)
-#   library(ggmap)
-#   library(geojsonio)
-#   library(rgdal)
-# }
-
 setwd('/home/nicole/Data Science/exam_big_data')
 
 #### LOAD DATASETS ###
@@ -30,7 +23,7 @@ setwd('/home/nicole/Data Science/exam_big_data')
 
 
 
-{ ##### START DATA CLEANING #######
+{ ##### START DATA CLEANING ####### --> DONE IN DATA_CLEANING
 
 ###====== Adding country code to world countries 
 ###====== using countrycode package !!!
@@ -192,7 +185,7 @@ ggplot(countries_world, aes(x=Continent, y=Population, fill=Region))+
 partial <- total_population %>%
   select(Country, Continent, Region, `1960`,`2017`) %>%
   na.omit() #%>%
-  summarize(sum(`1960`))
+  #summarize(sum(`1960`))
   
 #png(filename="/home/nicole/Data Science/exam_big_data/Images/continent_distribution.png",width=650,height=400)
 ggplot(partial, aes(x=Continent, y=2017, fill=Region))+
@@ -211,7 +204,7 @@ ggplot(partial, aes(x=Continent, y=2017, fill=Region))+
 
 #####################################################
 ####### WORLD PLOT TOTAL POPULATION ANALYSIS ########
-####### PERCENTAGE OF  FOR EVERY YEAR:
+####### PERCENTAGE OF FOR EVERY YEAR:
 worldpop <- total_population %>%
   filter(Country=="World")
 
