@@ -64,8 +64,9 @@ p1 <- plot_ly(tot, x = ~year, y = ~world_pop, name = 'popolation',
          xaxis = list(title = "Year"),
          yaxis = list (title = paste("Population (Billions)")))
 p1
-chart_link = api_create(p1, filename="prosp", sharing="public")
-chart_link
+#chart_link = api_create(p1, filename="prosp", sharing="public")
+#chart_link
+
 # OLD CODE
 # {
 #   clean <- function(ds){

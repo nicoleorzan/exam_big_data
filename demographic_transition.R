@@ -72,7 +72,7 @@ p_pop <- plot_ly(tot_pop2, x = ~year, y = ~pop, name = 'population', type = 'sca
          yaxis = list (title = paste("Total population of ",place)),
          margin = c(0.02,0.02,0.02,0.02),
          shapes = list(list(type = "rect",
-                            fillcolor = "green", line = list(color = "green"), opacity = 0.4,
+                            fillcolor = "green", line = list(color = "green"), opacity = 0.5,
                             x0 = "1960", x1 = "2005", xref = "x",
                             y0 = 400, y1 = 60000000, yref = "y")) )
 
@@ -107,7 +107,7 @@ it <-rbind(it, data.frame(year = c(2017), population=c(60551416)))
 
 # Diverging Barcharts
 full2$col = ifelse(full2$p>0, "blue", "green")
-png(filename="/home/nicole/Data Science/exam_big_data/Images/pgn.png",width=800,height=800)
+#png(filename="/home/nicole/Data Science/exam_big_data/Images/pgn.png",width=800,height=800)
 ggplot(full2, aes(x=y, y=p, colour=col)) + 
   theme_minimal()+
   geom_bar(stat='identity', width=.5)  +
@@ -123,7 +123,7 @@ ggplot(full2, aes(x=y, y=p, colour=col)) +
         plot.subtitle = element_text(size=24),
         axis.title.y = element_text(size=26), axis.text=element_text(size=20),
         legend.text=element_text(size=13), legend.title=element_text(size=14))
-dev.off()
+#dev.off()
 
 #=======================================================
 ## FERTILITY - NOT USED IN REPORT

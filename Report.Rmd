@@ -23,7 +23,6 @@ header-includes:
 - \setbeamercolor{frametitle}{bg=Purple}
 institute: University of Trieste
 graphics: yes
-subtitle: Where are we going?
 fontsize: 10pt
  
 ---
