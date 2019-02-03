@@ -59,8 +59,8 @@ p <- plot_ly(early_years, x = ~year, y = ~high, type = 'scatter', mode = 'lines'
                       ticks = 'outside',
                       zeroline = FALSE))
 p
-v#chart_link = api_create(p, filename="line-mode1")
-#chart_link
+chart_link = api_create(p, filename="line-mode1", sharing="public")
+chart_link
 
 p <- plot_ly(early_years, x = ~A, y = ~B, name = 'Lower Estimate', type = 'scatter', mode = 'lines+markers',width = 600, height = 400) %>%
   add_trace(y = ~C, name = 'Upper Estimate', mode = 'lines+markers') %>%

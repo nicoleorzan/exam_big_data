@@ -1,0 +1,11 @@
+base
+ggplot2
+plotly
+readODS
+bindrcpp
+leaflet
+dplyr
+sp
+rgdal
+geojsonio
+tidyr

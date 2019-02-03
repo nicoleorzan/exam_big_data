@@ -129,6 +129,8 @@ m
 #                        #overlayGroups = c("Density1990", "Density2017"),
 #                        options = layersControlOptions(collapsed = FALSE))
 #m
+#chart_link = api_create(m, filename="worldmap")
+#chart_link
 
 setwd('/home/nicole/Data Science/exam_big_data')
 #saveWidget(m, 'map.html', selfcontained = TRUE)

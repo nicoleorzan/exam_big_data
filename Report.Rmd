@@ -41,6 +41,10 @@ fontsize: 10pt
 </style>
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(eval = TRUE )
+knitr::opts_chunk$set(cache = TRUE )
+knitr::opts_chunk$set(warning = FALSE )
+knitr::opts_chunk$set(message = FALSE )
 ```
 
 <figure>
@@ -53,9 +57,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Never before in history, have there been so many people on Earth as right now. The number boosted in the years, from around 1 billion in the year 1800, to 7.5 billions in 2017.<br />
 
-Estimates of the population amount at earlier times have been done too: at the time agriculture emerged in around 10.000 Before Christ, the world population ranged between 1 million and 15 million. Even earlier - about 70.000 years ago - studies supports that humans may have gone through bottleneck of 1000 - 10000 people according to the thory of the Toba supervulcanic eruption<a href="#tag">$^{[1]}$</a>.
+For what concerns the population amount at earlier times, some estimates have been done: at the time agriculture emerged in around 10.000 Before Christ, the world population ranged between 1 million and 15 million. Even earlier - about 70.000 years ago - studies supports that humans may have gone through bottleneck of 1000 - 10000 people according to the thory of the Toba supervulcanic eruption<a href="#tag">$^{[1]}$</a>.
 
-Given the population growth of the last century, what should we expect for the next one? Will this lead to major changes in our lifestyle, or will this lead to wars, poverty problems, lack of primary resources and so on?<br />
+So I asked myself, given the population growth of the last century, what should we expect for the next one? Will this lead to major changes in our lifestyle, or will this lead to wars, poverty problems, lack of primary resources and so on?<br />
 Or maybe all those are just unwarrant fears and everything is going to fix itself?
 
 ## The Data
@@ -65,18 +69,18 @@ Or maybe all those are just unwarrant fears and everything is going to fix itsel
 
 For this study I joined various dataset. 
 
-I started my analysis using some datasets I found on the World Bank Open Data at https://data.worldbank.org/, where I downloaded the collections of data regarding population amount, Birthrate and Deathrate (both normalized over 1.000 people) and the Fertility of a Country; those datasets contain values about the relative indicators from 1960 to 2016 for (quite) every Country in the world, and they show some missing data.<br />
+I started my analysis using some datasets I found on the World Bank Open Data at https://data.worldbank.org/, where I downloaded the collections of data regarding population amount, Birthrate and Deathrate (both normalized over 1.000 people) of a Country; those datasets contain values about the relative indicators from 1960 to 2016 for (quite) every Country in the world, and they show some missing data.<br />
 
 To analyze the situation in Italy also in earlier years (1700 - 1960) I added the data found here: https://www.populstat.info/Europe/italyc.htm. <br />
 
 To have an estimate of the world's population from year one AD (annus domini), I took also data from here: https://www.ecology.com/population-estimates-year-2050/. <br />
 
-Finally, I used a bit also the dataset "Countries of the world" that you can find on Kaggle at https://www.kaggle.com/fernandol/countries-of-the-world, which contains some geographic charachteristics of the different countries, but of those I actually used only the Region (which I will better define later) and the Area.
+Finally, I used a bit also the dataset "Countries of the world" that you can find on Kaggle at https://www.kaggle.com/fernandol/countries-of-the-world, which contains some geographic charachteristics of the different countries, but of those I actually used only the Continent, the Region (which I will better define later), the Area and something else.
 
 
 ### Data Analysis
 
-To analyze the data I made use of different R packages: dplyr, leaflet, ggplot2, tidyr and stringr are the main names, but I used also geojsonio, rworldmap and countrycode to parse the data, leaflet to create some plots, and htmlwidget and htmltools to save and plot some interactive maps.
+To analyze the data I made use of different R packages:  plotly, dplyr, leaflet, ggplot2, tidyr, readr and stringr are the main names, but I used also geojsonio, rworldmap and countrycode to parse the data, leaflet to create some plots, and htmlwidget and htmltools to save and plot some interactive maps.
 
 Let's start now to explore a bit our datasets.
 
@@ -132,8 +136,8 @@ p
 #<img src="https://plot.ly/~Niki23/132.png">
 ```
 
-To generate this plot, I just had to read a simple three-columns table. I decided to use plotly, to have an interactive view of the data.<br />
-The table contains a lower estimate and the upper estimate of the world population in the years that you can read on the graph. As you can see, we started from year one with a mean value of 285 millions of individuals, number which then grew up to around 1.6 billions in 1900: in those ages, the world population starts to grow with a trend that seems quite exponential <br /><br />
+To generate this plot, I just had to read and plot a simple three-columns table. I decided to use plotly, to have an interactive view of the data.<br />
+The table contains a lower estimate and the upper estimate of the world population in the years frame 1 - 1800 AD. As you can see, we started from year one with a mean value of 285 millions of individuals, number which then grew up to around 1.6 billions in 1800: in those ages, the world population starts to grow with a trend that seems exponential <br /><br />
 
 **World Bank Data**
 
@@ -141,7 +145,7 @@ Let's take a look to the datasets of World Bank Open Data.<br />
 When one decides to download an indicator from this site, ends up with three files: 
 
 * The first one is made only by a source note, which better describes the choosen indicator: for "Total Population" we found : **Total population is based on the de facto definition of population, which counts all residents regardless of legal status or citizenship. The values shown are midyear estimates**;
-* In the second one we found a more precise descriptions for each Country;
+* In the second one we found more precise descriptions for each Country;
 * The third one is the real dataset, which contains the following columns:
     * "Country Name"  
     * "Country Code"   
@@ -151,7 +155,7 @@ When one decides to download an indicator from this site, ends up with three fil
 
 Indicator Name and Code are quite useless for our scope, beacuse they are only a skimpy description of the table content. Country name and code are instead essential: each observation (row) of the table contains all the data values for one single Country, for the 1960 - 2017 time frame.
 
-We can say that those data frames are tidy: the primary key is obviously present (the Country name, but also the Code can be used), each observations has its own row, and each variable is set in only one column, if we consider each year as a variable on its own. In some of my later use, however, the "Year" will become a variable, and I will have to use the **gather** function to modify my dataset. <br />
+We can say that those data frames are tidy: the primary key is obviously present (the Country name, but also the Code can be used), each observations has its own row, and each variable is set in only one column, if we consider each year as a variable on its own. In some of my later use, however, "Years" will become a variable, and I will have to use the **gather** function to modify my dataset. <br />
 The only thing I had to do to "tidy" my data, was to eliminate some rows or columns which contained only NA values.<br /> 
 An important thing to say, is that this dataset contains also some non-Country data, inserted as rows into the dataset: as an example, there is the row "World". It was not necessary to eliminate them, but it was needed to be aware they were present.
 
@@ -171,18 +175,21 @@ Where $P_{t}$ represents the population in a certain year and $P_{t-1}$ the popu
 
 ![](Images/pop_number2.png){ width=49% } ![](Images/pop_growth2.png){ width=49% }
 
-So, the population is still growing, but the growth rate is falling down quickly, it seems: it went from around 2.0% to 1.0% within 57 years! This is a good news.
+So, the population is still growing, but the growth rate is falling down quickly, it seems: it went from around 2.0% to 1.0% within 57 years! This is a good news to hear, as the fear of the overpopulation is present in those years.
 <br /><br />
 
 **Population Distribution**
 
-To complete our understanding, let's now have a look at the distribution of the people around the Continents and the different Regions in 2017. I made a check in different years, but the distribution is always quite the same, so I report here plot only for the year 2017.
+To complete our understanding, let's now have a look at the distribution of the people around the Continents and the different Regions in 2017. I made a check in different years, but the distribution (normalized over the number of people) is always quite the same, so I report here plot only for the year 2017.
 <br />
 
 ![](Images/continent_distribution.png){ width=75% ref="refe"}
 
 <br />
-Given the "total population" data, I created a new dataset containing the density of people in the different Countries, to show it then on a map: to do so I keep the "Area" measure from the "countries_world" dataset took from Kaggle and I computed the density as the number of people over the area. Then, I had to created a discrete scale of values to make a map work.<br />
+
+Looking to the distribution plot, we can see that the most populous areas are the Sub-Saharan Africa and the Latin America and Carribean.
+
+Given the "total population" data, I created a new dataset containing the density of people in the different Countries, to show it then on a map: to do so I keep the "Area" measure from the "countries_world" dataset (took from Kaggle) and I computed the density as the number of people over the area. Then, I had to created a discrete scale of values to make then the map work.<br />
 
 Let's now have a look at the density map: here below you can see a leaflet representation of the distribution of people in the whole world. <br />
 For it, I had to perform other data arrangements because some Country's names where not exact for leaflet: for example, instead of "United States" it was expected "United States of America", so I had to check manually for a lot of Country names.
@@ -314,19 +321,18 @@ The birth rate, which is usually high in a poor country, will no longer be compe
 
 In 1929 the American demographer **Warren Thompson** developed the theory of the Demographic Transition model<a href="#tag">$^{[3]}$</a>, which is based on the observation of changes - or transitions - from high birth and death rates to lower birth and death rates, during the industrial Growth of a Country.
 
-This theory can involve four to five stages of transition of the trend of population growth.
+This theory can involve four to five stages of transition for the trend of population growth.
 Here's a summary of the five steps:
 
 * **Stage One**: Pre-Industrial Revolution, birth rates and death rates are both high, in general the level of the population stays the same;
 * **Stage Two**: In a developing country death rates tents to diminish while birth rates stay high: population is growing;
-* **Stage Three**: Thanks to the better economic and living conditions, births starts to decrease (a big point here is due to introduction of contraception);
+* **Stage Three**: Thanks to the better economic and living conditions, births starts to decrease (thanks to contraception, vaccines, better hygienic conditions and so on);
 * **Stage Four**: Birth rates and death rates are both low, so population is stabilizing. Most of today's developed countries are in this stage;
 * **Stage Five** (possible stage): Here the birth rates have fallen below death rates, so the quantity of older people is bigger than the quantity of younger ones. 
 
 This is a model, consequently it is idealized and may not be accurate in every case, and so it remains to be seen if it can be applied to the less develop societies of today.
 
-Let's have a look at the situation in Italy, for example: in the graphs below you can see the trend of births, deaths, and the total population from 1960 to 2016.
-
+Let's have a look at the situation in Italy, for example.
 
 ### Demographic Transition of Italy
 
@@ -414,7 +420,7 @@ p3
 
 <br />
 
-As we can see, the trend of birthrate it's descending over the years, while the one for the deathrate remained almost the same. The total population in growing, but in the last years the growth has slowed down a bit beacause the birth rate is descreased. It looks like Italy is into stage three of the model, but looking to some online resources (for example https://italyfogartyl.weebly.com/people-and-population.html) we can read: *"Italy is currently in Stage 4 of the Demographic Transition Model (DTM). Stage 4 is characterized as having low birth rates, low death rates, and a low Population Growth Rate (PGR), causing the population to stabilize"*.
+As we can see, the trend of birthrate it's descending over the years, while the one for the deathrate remained almost the same. The total population is growing, but in the last years the growth has slowed down a bit beacause the birth rate is descreased. It looks like Italy is into stage three of the model, but looking to some online resources (for example https://italyfogartyl.weebly.com/people-and-population.html) we can read: *"Italy is currently in Stage 4 of the Demographic Transition Model (DTM). Stage 4 is characterized as having low birth rates, low death rates, and a low Population Growth Rate (PGR), causing the population to stabilize"*.
 
 Let's then have a look to the **Population Growth Rate** (PGR), which is defined like this:
 
@@ -433,23 +439,8 @@ knitr::include_graphics("Images/pgn.png")
 ```
 
 
-As we can see from the plot, the PGR values are always quite low from 1960 on, and in the last years (2015 - 2016) its values starts to become negative. This is a good proof that Italy's population is diminishing, and so that Italy is currently standing into Stage Four of the Demographic Transiiton. 
+As we can see from the plot, the PGR values are always quite low from 1960 on, and in the last years (2015 - 2016) its values starts to become negative. This good proof that Italy's population growth rate is diminishing assures us that Italy is currently standing into Stage Four of the Demographic Transiiton. 
 
-
-
-
-
-
-
-
-
-
-
-
-
-```{r, echo=FALSE}
-#![](Images/1960.png){ width=70% }
-```
 
 
 
