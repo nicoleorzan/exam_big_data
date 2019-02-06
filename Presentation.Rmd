@@ -38,7 +38,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Motivation
 
 <figure>
-<img src="Images/overpop.jpg" style="position:absolute;top:50px;right:50px;" width=350 border="0">
+<img src="Images/overpop.jpg" style="position:absolute;top:50px;right:170px;" width=650 border="0">
 </figure>
 
 
@@ -93,25 +93,7 @@ p
 ```
 </div>
 
-## World Bank Data
 
-<font size="4">
-
-<figure>
-<a href="https://data.worldbank.org/">
-<img src="Images/logo.jpg" style="position:absolute;top:60px;right:30px;" width=120 alt="logo" border="0">
-</a>
-</figure>
-
-Dataset Variables:
-
-* Country Name
-* Country Code   
-* Indicator Name 
-* Indicator Code
-* years from 1960 to 2017
-
-</font>
 
 ## World in the years
 
@@ -347,3 +329,23 @@ p1
 [8] http://www.clker.com/clipart-530947.html (clipart)
 </font>
 
+
+## World Bank Data
+
+<font size="4">
+
+<figure>
+<a href="https://data.worldbank.org/">
+<img src="Images/logo.jpg" style="position:absolute;top:60px;right:30px;" width=120 alt="logo" border="0">
+</a>
+</figure>
+
+Dataset Variables:
+
+* Country Name
+* Country Code   
+* Indicator Name 
+* Indicator Code
+* years from 1960 to 2017
+
+</font>
