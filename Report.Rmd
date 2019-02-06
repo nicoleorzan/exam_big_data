@@ -538,6 +538,10 @@ Maybe the prediction can be improved in some way by inserting more predictors (l
 
 However according to some online resources, my prediction does not seem so bad: for example, the  <a href="https://www.un.org/development/desa/en/news/population/world-population-prospects-2017.html ">United Nations Department of Economic and Social Affairs</a>. predicted the world population to reach 9.8 billion in 2050 and 11.2 billion in 2100.
 
+Concluding, we studied the world population and various indicators, and we discovered that we are going to grow but also that with high probability our growth is not unbounded. The only way to know now if all this is true, is to wait for it and see what will happen!
+
+Thanks for reading.
+
 
 <p id="tag">
 ## References

@@ -1,0 +1,6 @@
+base
+leaflet
+dplyr
+sp
+rgdal
+geojsonio

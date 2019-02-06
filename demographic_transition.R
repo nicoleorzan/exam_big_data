@@ -115,7 +115,7 @@ ggplot(full2, aes(x=y, y=p, colour=col)) +
                     labels = c("Above Average", "Below Average"), 
                     values = c("above"="#00ba38", "below"="#f8766d")) + 
   labs(subtitle="Divergence from 0 of PGR", 
-       title= "Population Growth Rate") + 
+       title= "Population Growth Rate of Italy") + 
   coord_flip()+
   ylab("Population Growth Rate value")+xlab("Year")+
   theme(legend.position="none")+
