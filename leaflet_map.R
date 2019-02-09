@@ -88,7 +88,7 @@ prova <- merge(states, population, by="name")
 #class(prova)
 
 m <- leaflet(prova) %>%
-  setView(-1, 42, zoom=2) %>%
+  setView(-1, 42, zoom=1) %>%
   addProviderTiles("MapBox", options = providerTileOptions(
     id = "mapbox.light",
     accessToken = Sys.getenv('MAPBOX_ACCESS_TOKEN')))

@@ -30,9 +30,23 @@ widescreen: true
   width: 35%;
   text-align: left;
 }
+.column-left2{
+  position: absolute;
+  left: 0;
+  margin-left: 10px;
+  float: left;
+  width: 60%;
+  text-align: left;
+}
 .column-right{
   float: right;
   width: 65%;
+  text-align: center;
+}
+.column-right2{
+  float: right;
+  width: 40%;
+  height: 80%;
   text-align: center;
 }
 </style>
@@ -55,11 +69,11 @@ knitr::opts_chunk$set(echo = FALSE)
 </figure>
 
 <figure>
-<img src="Images/kaggle.png" style="position:absolute;top:220px;right:670px;" width=250 border="0">
+<img src="Images/kaggle.png" style="position:absolute;top:200px;right:670px;" width=250 border="0">
 </figure>
 
 <figure>
-<img src="Images/eco.png" style="position:absolute;top:400px;right:670px;" width=250 border="0">
+<img src="Images/eco.png" style="position:absolute;top:420px;right:670px;" width=250 border="0">
 </figure>
 
 <figure>
@@ -73,7 +87,7 @@ knitr::opts_chunk$set(echo = FALSE)
 library(knitr)
 c <- data.frame("Year" = c("8000 B.C", "1200" ,"1750", "1850", "1950", "2017"), 
                 "Population" = c("5.000.000","450.000.000", "795.000.000","1.265.000.000","2.516.000.000","7.536.000.000"), 
-                "Ever_Born_People" = c("1.137.789.769", "73.754.465.125", "89.708.399.091","4.046.240.009" , "100.045.075.171", "108.470.690.115") )
+                "Ever_Born_People" = c("1.137.789.769", "73.754.465.125", "89.708.399.091","93.754.639.100", "100.045.075.171", "108.470.690.115") )
 kable(c)
 ```
 
@@ -144,9 +158,21 @@ p
 
 ## Population distribution
 
-<div class="content">
-<img width="80%" src="Images/continent_distribution.png"/>
-</content>
+<div class="column-left2">
+
+```{r, echo-FALSE}
+#<div class="content">
+#content>
+```
+
+<img width="95%" src="Images/continent_distribution.png"/>
+
+</div>
+<div class="column-right2">
+```{r, echo=FALSE}
+htmltools::tags$iframe(title = "Map", src = "map_Regions.html")
+```
+</div>
 
 ## World Population Density Distribution
 
@@ -155,9 +181,11 @@ htmltools::tags$iframe(title = "Map", src = "map.html")
 ```
 
 
-## Demographic Transition
+## Demographic Transition Model
 
 <font size="5">
+
+Warren Thompson, 1929
 
 * **<span style="color:green">Stage One</span>**: Pre-Industrial Revolution, high birth rates and death rates
 * **<span style="color:green">Stage Two</span>**: The Country is developing, death rates tents to diminish while birth rates stay high: population is growing

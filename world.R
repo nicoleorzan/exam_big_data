@@ -1,6 +1,8 @@
 {
   library(dplyr)
+  library(leaflet)
   library(ggplot2)
+  library(RColorBrewer)
   library(countrycode)
   library(tidyr)
   library(stringr)
@@ -187,21 +189,124 @@ partial <- total_population %>%
   na.omit() #%>%
   #summarize(sum(`1960`))
   
-#png(filename="/home/nicole/Data Science/exam_big_data/Images/continent_distribution.png",width=650,height=400)
+png(filename="/home/nicole/Data Science/exam_big_data/Images/continent_distribution.png",width=650,height=400)
 ggplot(partial, aes(x=Continent, y=2017, fill=Region))+
   geom_bar(width=0.7, stat="identity")+
   theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5, size=7))+
   theme(legend.text=element_text(size=6))+
   theme_bw()+ylab("count")+
   ggtitle("2017 Population distribution")+
+  scale_fill_brewer(palette="Paired")+
   theme(plot.title = element_text(size=22), axis.title.x = element_text(size=20),
         axis.title.y = element_text(size=20), axis.text=element_text(size=13),
         legend.text=element_text(size=13), legend.title=element_text(size=14))
-#dev.off()
+dev.off()
 
+states <- geojsonio::geojson_read("prova.geo.json", what = "sp")
+partial <- transform(partial, Regnum = as.numeric(Region))
 
+colnames(partial)[1] <- "name"
+population <- partial
+{
+  levels(population$name) <- c(levels(population$name), "United States of America")
+  population$name[population$name == 'United States'] <- "United States of America"
+  
+  levels(population$name) <- c(levels(population$name), "Russia")
+  population$name[population$name == 'Russian Federation'] <- "Russia"
+  
+  levels(population$name) <- c(levels(population$name), "Democratic Republic of the Congo")
+  population$name[population$name == "Congo, Dem. Rep."] <- "Democratic Republic of the Congo"
+  
+  levels(population$name) <- c(levels(population$name), "Iran")
+  population$name[population$name == "Iran, Islamic Rep."] <- "Iran"
+  
+  levels(population$name) <- c(levels(population$name), "Republic of Serbia")
+  population$name[population$name == "Serbia"] <- "Republic of Serbia"
+  
+  levels(population$name) <- c(levels(population$name), "Egypt")
+  population$name[population$name == "Egypt, Arab Rep."] <- "Egypt"
+  
+  levels(population$name) <- c(levels(population$name), "Venezuela")
+  population$name[population$name == 'Venezuela, RB'] <- "Venezuela"
+  
+  levels(population$name) <- c(levels(population$name), "United Republic of Tanzania")
+  population$name[population$name == "Tanzania"] <- "United Republic of Tanzania"
+  
+  levels(population$name) <- c(levels(population$name), "Yemen")
+  population$name[population$name == 'Yemen, Rep.'] <- "Yemen"
+  
+  levels(population$name) <- c(levels(population$name), "Ivory Coast")
+  population$name[population$name == "Cote d'Ivoire"] <- "Ivory Coast"
+  
+  levels(population$name) <- c(levels(population$name), "Kyrgyzstan")
+  population$name[population$name == "Kyrgyz Republic"] <- "Kyrgyzstan"
+  
+  levels(population$name) <- c(levels(population$name), "Syria")
+  population$name[population$name == "Syrian Arab Republic"] <- "Syria"
+  
+  levels(population$name) <- c(levels(population$name), "Republic of the Congo")
+  population$name[population$name == "Congo, Rep."] <- "Republic of the Congo"
+  
+  levels(population$name) <- c(levels(population$name), "Laos")
+  population$name[population$name == "Lao PDR"] <- "Laos"
+  
+  levels(population$name) <- c(levels(population$name), "Slovakia")
+  population$name[population$name == "Slovak Republic"] <- "Slovakia"
+  
+  levels(population$name) <- c(levels(population$name), "Macedonia")
+  population$name[population$name == "Macedonia, FYR"] <- "Macedonia"
+  
+  levels(population$name) <- c(levels(population$name), "Guinea Bissau")
+  population$name[population$name == "Guinea-Bissau"] <- "Guinea Bissau"
+  
+  levels(population$name) <- c(levels(population$name), "South Korea")
+  population$name[population$name == "Korea, Rep."] <- "South Korea"
+  
+  levels(population$name) <- c(levels(population$name), "North Korea")
+  population$name[population$name == "Korea, Dem. People’s Rep."] <- "North Korea"
+}
+partial <- population
+prova <- merge(states, partial, by="name")
+m <- leaflet(prova) %>%
+  setView(-1, 42, zoom=1) %>%
+  addProviderTiles("MapBox", options = providerTileOptions(
+    id = "mapbox.light",
+    accessToken = Sys.getenv('MAPBOX_ACCESS_TOKEN')))
 
+#bins <- partial$Regnum
+#bins
+colourCount = length(unique(partial$Regnum))
+getPalette = colorRampPalette(brewer.pal(9, "Set1"))
+pal2 <- getPalette(colourCount)
+#pal <- colorBin(pal2, domain = states$density, bins = bins)#domain = 0:11, bins=bins)
+pal <- colorBin("Paired", domain = states$density, bins = colourCount)
 
+labels <- sprintf(
+  "<strong>%s</strong><br/> %s",
+  prova$name, prova$Region
+) %>% lapply(htmltools::HTML)
+
+m <- m %>% addPolygons(
+  fillColor = ~pal(Regnum),
+  weight = 2,
+  opacity = 1,
+  color = "white",
+  dashArray = "3",
+  fillOpacity = 0.7,
+  highlight = highlightOptions(
+    weight = 5,
+    color = "#666",
+    dashArray = "",
+    fillOpacity = 0.7,
+    bringToFront = TRUE),
+  label = labels,
+  labelOptions = labelOptions(
+    style = list("font-weight" = "normal", padding = "3px 8px"),
+    textsize = "15px",
+    direction = "auto"))
+m
+
+saveWidget(m, 'map_Regions.html', selfcontained = TRUE)
 #####################################################
 ####### WORLD PLOT TOTAL POPULATION ANALYSIS ########
 ####### PERCENTAGE OF FOR EVERY YEAR:
