@@ -1,5 +1,5 @@
 ---
-title: "World Population Analysis"
+title: "World Population Growth"
 author: "Nicole Orzan"
 date: "11 february 2019"
 output: ioslides_presentation
@@ -7,6 +7,13 @@ widescreen: true
 ---
 
 <style>
+.footnote {
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 35px;
+  width: 80%;
+  font-size: 65%;
+}
 .content {
     height: 100%;
     width:1000px;
@@ -41,10 +48,44 @@ knitr::opts_chunk$set(echo = FALSE)
 <img src="Images/overpop.jpg" style="position:absolute;top:50px;right:170px;" width=650 border="0">
 </figure>
 
+## Data Sources
 
-## Early Years Population Distribution
+<figure>
+<img src="Images/logo.jpg" style="position:absolute;top:170px;right:220px;" width=250 border="0">
+</figure>
+
+<figure>
+<img src="Images/kaggle.png" style="position:absolute;top:220px;right:670px;" width=250 border="0">
+</figure>
+
+<figure>
+<img src="Images/eco.png" style="position:absolute;top:400px;right:670px;" width=250 border="0">
+</figure>
+
+<figure>
+<img src="Images/wdata.png" style="position:absolute;top:400px;right:240px;" width=200 border="0">
+</figure>
+
+
+## How many people have ever lived on Earth?
+
+```{r}
+library(knitr)
+c <- data.frame("Year" = c("8000 B.C", "1200" ,"1750", "1850", "1950", "2017"), 
+                "Population" = c("5.000.000","450.000.000", "795.000.000","1.265.000.000","2.516.000.000","7.536.000.000"), 
+                "Ever_Born_People" = c("1.137.789.769", "73.754.465.125", "89.708.399.091","4.046.240.009" , "100.045.075.171", "108.470.690.115") )
+kable(c)
+```
+
+<div class="footnote">
+Data Source: https://www.prb.org/howmanypeoplehaveeverlivedonearth/
+</div>
+
+
+## World Population Estimation
 
 <div class="content">
+
 ```{r, echo=FALSE, message=FALSE}
 library(plotly)
 library(readODS)
@@ -71,7 +112,7 @@ p <- plot_ly(early_years, x = ~year, y = ~high, type = 'scatter', mode = 'linesa
             marker=list( size=5 , opacity=0.5, color='rgb(70,150,80)'),
             line = list(color='rgb(0,150,0)'),marker=list( size=5 , opacity=0.5, color="black"),
             name = '(Year, Avg)') %>%
-  layout(title = "World Population Estimation of Early Ages\n (1 A.D - 1800 A.D)",
+  layout(title = "World Population Estimation\n (1 A.D - 1900 A.D)",
          paper_bgcolor='rgb(255,255,255)',
          xaxis = list(title = "Years",
                       #gridcolor = 'rgb(255,255,255)',
@@ -91,6 +132,7 @@ p <- plot_ly(early_years, x = ~year, y = ~high, type = 'scatter', mode = 'linesa
                       zeroline = FALSE))
 p
 ```
+
 </div>
 
 
