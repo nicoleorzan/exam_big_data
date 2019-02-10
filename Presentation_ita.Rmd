@@ -167,13 +167,13 @@ htmltools::tags$iframe(title = "Map", src = "map.html")
 ```
 
 
-## Modello di Transzione Demografica
+## Modello di Transizione Demografica
 
 <font size="5">
 
 Warren Thompson, 1929
 
-* **<span style="color:green">Stage 1</span>**: Pre Rivoluzione industriale,alti rate di natalità e mortalità
+* **<span style="color:green">Stage 1</span>**: Pre Rivoluzione industriale, alti rate di natalità e mortalità
 * **<span style="color:green">Stage 2</span>**: Il paese di sta sviluppando, la mortalità diminuisce mentre i tassi di natalità rimangono alti: la popolazione aumenta
 * **<span style="color:green">Stage 3</span>**: I rate di nascita iniziano a diminuire, grazie alle migliori condizioni di vita, economiche ed igieniche
 * **<span style="color:green">Stage 4</span>**: I tassi di natalità e mortalità sono entrambi bassi, la popolazione si stabilizza
