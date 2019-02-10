@@ -3,6 +3,7 @@
   library(leaflet)
   library(ggplot2)
   library(RColorBrewer)
+  library(htmlwidgets)
   library(countrycode)
   library(tidyr)
   library(stringr)
@@ -276,10 +277,16 @@ m <- leaflet(prova) %>%
 #bins <- partial$Regnum
 #bins
 colourCount = length(unique(partial$Regnum))
-getPalette = colorRampPalette(brewer.pal(9, "Set1"))
+getPalette = colorRampPalette(brewer.pal(11, "Paired"))
 pal2 <- getPalette(colourCount)
 #pal <- colorBin(pal2, domain = states$density, bins = bins)#domain = 0:11, bins=bins)
-pal <- colorBin("Paired", domain = states$density, bins = colourCount)
+pal <- colorBin("Paired", domain = states$density, bins = colourCount+1)
+
+partial$color <- pal(partial$Regnum)
+partial[partial$Region=="WESTERN EUROPE" ,]$color <- "#FFFF99" #&& !is.na(partial$Region),]
+prr <- merge(states, partial, by="name")
+#prova[prova$Region=="WESTERN EUROPE" && !is.na(prova$Region),]$color
+prova <- prr
 
 labels <- sprintf(
   "<strong>%s</strong><br/> %s",
@@ -287,7 +294,7 @@ labels <- sprintf(
 ) %>% lapply(htmltools::HTML)
 
 m <- m %>% addPolygons(
-  fillColor = ~pal(Regnum),
+  fillColor = ~prova$color,#pal(Regnum),
   weight = 2,
   opacity = 1,
   color = "white",

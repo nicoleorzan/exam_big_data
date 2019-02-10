@@ -59,7 +59,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Perche?
 
 <figure>
-<img src="Images/overpop.jpg" style="position:absolute;top:50px;right:170px;" width=650 border="0">
+<img src="Images/overpop.jpg" style="position:absolute;top:50px;right:190px;" width=650 border="0">
 </figure>
 
 ## Sorgenti Dati
