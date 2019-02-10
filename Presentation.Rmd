@@ -81,20 +81,6 @@ knitr::opts_chunk$set(echo = FALSE)
 </figure>
 
 
-## How many people have ever lived on Earth?
-
-```{r}
-library(knitr)
-c <- data.frame("Year" = c("8000 B.C", "1200" ,"1750", "1850", "1950", "2017"), 
-                "Population" = c("5.000.000","450.000.000", "795.000.000","1.265.000.000","2.516.000.000","7.536.000.000"), 
-                "Ever_Born_People" = c("1.137.789.769", "73.754.465.125", "89.708.399.091","93.754.639.100", "100.045.075.171", "108.470.690.115") )
-kable(c)
-```
-
-<div class="footnote">
-Data Source: https://www.prb.org/howmanypeoplehaveeverlivedonearth/
-</div>
-
 
 ## World Population Estimation
 
@@ -317,7 +303,11 @@ $$
 N(t) = \frac{K N_0 e^{-rt}}{K + N_0(e^{-rt}-1)}
 $$
 
-Where $N_0$ is the starting number of individuals.
+Where:
+
+* $N_0$ is the starting number of individuals.
+* r is the growth rate
+* K is the carrying capacity
 
 </font>
 </div>
@@ -419,3 +409,18 @@ Dataset Variables:
 * years from 1960 to 2017
 
 </font>
+
+## How many people have ever lived on Earth?
+
+```{r}
+library(knitr)
+c <- data.frame("Year" = c("8000 B.C", "1200" ,"1750", "1850", "1950", "2017"), 
+                "Population" = c("5.000.000","450.000.000", "795.000.000","1.265.000.000","2.516.000.000","7.536.000.000"), 
+                "Ever_Born_People" = c("1.137.789.769", "73.754.465.125", "89.708.399.091","93.754.639.100", "100.045.075.171", "108.470.690.115") )
+kable(c)
+```
+
+<div class="footnote">
+Data Source: https://www.prb.org/howmanypeoplehaveeverlivedonearth/
+</div>
+

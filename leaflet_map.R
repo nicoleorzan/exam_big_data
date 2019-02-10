@@ -88,15 +88,16 @@ prova <- merge(states, population, by="name")
 #class(prova)
 
 m <- leaflet(prova) %>%
-  setView(-1, 42, zoom=1) %>%
+  setView(-1, 42, zoom=2) %>%
   addProviderTiles("MapBox", options = providerTileOptions(
     id = "mapbox.light",
     accessToken = Sys.getenv('MAPBOX_ACCESS_TOKEN')))
 #m %>% addPolygons()
 
-bins <- c(0, 10, 20, 50, 100, 200, 400, 500, 1000, Inf)
+bins <- c(0, 5, 10, 20, 50, 100, 200, 400, 500, Inf)
+b <-    c(0,10, 20, 25, 50, 75, 100, 150, 300, Inf)
 #bins_totpop <- c(0, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000, 100000000, Inf)
-pal <- colorBin("YlOrRd", domain = states$density, bins = bins)
+pal <- colorBin("YlOrRd", domain = states$density, bins = b)
 
 
 
@@ -132,5 +133,5 @@ m
 #chart_link = api_create(m, filename="worldmap")
 #chart_link
 
-setwd('/home/nicole/Data Science/exam_big_data')
+#setwd('/home/nicole/Data Science/exam_big_data')
 #saveWidget(m, 'map.html', selfcontained = TRUE)
