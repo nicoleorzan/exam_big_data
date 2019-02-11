@@ -313,7 +313,7 @@ m <- m %>% addPolygons(
     direction = "auto"))
 m
 
-saveWidget(m, 'map_Regions.html', selfcontained = TRUE)
+# saveWidget(m, 'map_Regions.html', selfcontained = TRUE)
 #####################################################
 ####### WORLD PLOT TOTAL POPULATION ANALYSIS ########
 ####### PERCENTAGE OF FOR EVERY YEAR:

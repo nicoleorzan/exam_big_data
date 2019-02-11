@@ -233,6 +233,14 @@ p <- subplot(p1, p2, shareX = TRUE, titleX = TRUE, titleY = TRUE, margin = c(0.0
 p
 ```
 
+<font size="5">
+
+Tassi di Natalità e Mortalità:
+$$
+n(x) = \frac{N(x)}{(P(x-1) + P(x))/2} \cdot 100
+$$
+</font>
+
 ## Transizione Demografica in Italia
 
 ``````{r, echo=FALSE, message=FALSE}
