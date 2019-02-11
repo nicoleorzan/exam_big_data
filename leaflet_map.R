@@ -103,7 +103,7 @@ pal <- colorBin("YlOrRd", domain = states$density, bins = b)
 
 
 labels <- sprintf(
-  "<strong>%s</strong><br/>%g people / m<sup>2</sup>",
+  "<strong>%s</strong><br/>%g people / km<sup>2</sup>",
   prova$name, prova$Density2017
 ) %>% lapply(htmltools::HTML)
 
@@ -133,5 +133,5 @@ m
 #chart_link = api_create(m, filename="worldmap")
 #chart_link
 
-#setwd('/home/nicole/Data Science/exam_big_data')
-#saveWidget(m, 'map.html', selfcontained = TRUE)
+setwd('/home/nicole/Data Science/exam_big_data')
+saveWidget(m, 'map.html', selfcontained = TRUE)

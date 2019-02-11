@@ -398,26 +398,6 @@ p1
 </font>
 
 
-## World Bank Data
-
-<font size="4">
-
-<figure>
-<a href="https://data.worldbank.org/">
-<img src="Images/logo.jpg" style="position:absolute;top:60px;right:30px;" width=120 alt="logo" border="0">
-</a>
-</figure>
-
-Dataset Variables:
-
-* Country Name
-* Country Code   
-* Indicator Name 
-* Indicator Code
-* years from 1960 to 2017
-
-</font>
-
 ## Quante persone hanno vissuto sulla Terra?
 
 ```{r}
